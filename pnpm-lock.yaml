@@ -67,6 +67,19 @@ importers:
         specifier: ^8.3.4
         version: 8.3.5(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)
 
+  packages/component-registry:
+    dependencies:
+      '@visual-builder/document-schema':
+        specifier: workspace:*
+        version: link:../document-schema
+      zod:
+        specifier: ^4.0.0
+        version: 4.6.7
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+
   packages/document-schema:
     dependencies:
       zod:
@@ -76,6 +89,19 @@ importers:
       tsx:
         specifier: ^4.23.15
         version: 4.23.15
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+
+  packages/editor-engine:
+    dependencies:
+      '@visual-builder/component-registry':
+        specifier: workspace:*
+        version: link:../component-registry
+      '@visual-builder/document-schema':
+        specifier: workspace:*
+        version: link:../document-schema
+    devDependencies:
       typescript:
         specifier: ^5.0.0
         version: 5.9.3

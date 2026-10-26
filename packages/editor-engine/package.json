@@ -1,0 +1,20 @@
+
+{
+  "name": "@visual-builder/editor-engine",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@visual-builder/document-schema": "workspace:*",
+    "@visual-builder/component-registry": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
