@@ -1,0 +1,785 @@
+
+> @visual-builder/component-registry@0.1.0 typecheck /Users/muktakumari/Downloads/web-builder/packages/component-registry
+> tsc --noEmit
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/classic/schemas.d.cts[0m:[93m623[0m:[93m13[0m - [91merror[0m[90m TS2583: [0mCannot find name 'Set'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+
+[7m623[0m     values: Set<T>;
+[7m   [0m [91m            ~~~[0m
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/checks.d.cts[0m:[93m266[0m:[93m6[0m - [91merror[0m[90m TS2585: [0m'Symbol' only refers to a type, but is being used as a value here. Do you need to change your target library? Try changing the 'lib' compiler option to es2015 or later.
+
+[7m266[0m     [Symbol.iterator](): Iterator<this>;
+[7m   [0m [91m     ~~~~~~[0m
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/checks.d.cts[0m:[93m266[0m:[93m26[0m - [91merror[0m[90m TS2583: [0mCannot find name 'Iterator'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+
+[7m266[0m     [Symbol.iterator](): Iterator<this>;
+[7m   [0m [91m                         ~~~~~~~~[0m
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/json-schema-generator.d.cts[0m:[93m52[0m:[93m17[0m - [91merror[0m[90m TS2583: [0mCannot find name 'Map'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+
+[7m52[0m     get seen(): Map<schemas.$ZodType, Seen>;
+[7m  [0m [91m                ~~~[0m
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/json-schema-processors.d.cts[0m:[93m13[0m:[93m16[0m - [91merror[0m[90m TS2583: [0mCannot find name 'Set'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+
+[7m13[0m     patterns?: Set<RegExp>;
+[7m  [0m [91m               ~~~[0m
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/registries.d.cts[0m:[93m16[0m:[93m11[0m - [91merror[0m[90m TS2583: [0mCannot find name 'WeakMap'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+
+[7m16[0m     _map: WeakMap<Schema, $replace<Meta, Schema>>;
+[7m  [0m [91m          ~~~~~~~[0m
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/registries.d.cts[0m:[93m17[0m:[93m13[0m - [91merror[0m[90m TS2583: [0mCannot find name 'Map'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+
+[7m17[0m     _idmap: Map<string, Schema>;
+[7m  [0m [91m            ~~~[0m
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/schemas.d.cts[0m:[93m61[0m:[93m13[0m - [91merror[0m[90m TS2583: [0mCannot find name 'Set'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+
+[7m61[0m     traits: Set<string>;
+[7m  [0m [91m            ~~~[0m
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/schemas.d.cts[0m:[93m133[0m:[93m19[0m - [91merror[0m[90m TS2583: [0mCannot find name 'Set'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+
+[7m133[0m         patterns: Set<RegExp>;
+[7m   [0m [91m                  ~~~[0m
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/schemas.d.cts[0m:[93m738[0m:[93m21[0m - [91merror[0m[90m TS2583: [0mCannot find name 'Map'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+
+[7m738[0m         optionsMap: Map<util.Primitive, $ZodType | null>;
+[7m   [0m [91m                    ~~~[0m
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/schemas.d.cts[0m:[93m857[0m:[93m129[0m - [91merror[0m[90m TS2583: [0mCannot find name 'Map'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+
+[7m857[0m export interface $ZodMapInternals<Key extends SomeType = $ZodType, Value extends SomeType = $ZodType> extends $ZodTypeInternals<Map<core.output<Key>, core.output<Value>>, Map<core.input<Key>, core.input<Value>>> {
+[7m   [0m [91m                                                                                                                                ~~~[0m
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/schemas.d.cts[0m:[93m857[0m:[93m172[0m - [91merror[0m[90m TS2583: [0mCannot find name 'Map'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+
+[7m857[0m export interface $ZodMapInternals<Key extends SomeType = $ZodType, Value extends SomeType = $ZodType> extends $ZodTypeInternals<Map<core.output<Key>, core.output<Value>>, Map<core.input<Key>, core.input<Value>>> {
+[7m   [0m [91m                                                                                                                                                                           ~~~[0m
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/schemas.d.cts[0m:[93m871[0m:[93m92[0m - [91merror[0m[90m TS2583: [0mCannot find name 'Set'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+
+[7m871[0m export interface $ZodSetInternals<T extends SomeType = $ZodType> extends $ZodTypeInternals<Set<core.output<T>>, Set<core.input<T>>> {
+[7m   [0m [91m                                                                                           ~~~[0m
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/schemas.d.cts[0m:[93m871[0m:[93m113[0m - [91merror[0m[90m TS2583: [0mCannot find name 'Set'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+
+[7m871[0m export interface $ZodSetInternals<T extends SomeType = $ZodType> extends $ZodTypeInternals<Set<core.output<T>>, Set<core.input<T>>> {
+[7m   [0m [91m                                                                                                                ~~~[0m
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/schemas.d.cts[0m:[93m907[0m:[93m13[0m - [91merror[0m[90m TS2583: [0mCannot find name 'Set'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+
+[7m907[0m     values: Set<T>;
+[7m   [0m [91m            ~~~[0m
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/to-json-schema.d.cts[0m:[93m97[0m:[93m11[0m - [91merror[0m[90m TS2583: [0mCannot find name 'Map'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+
+[7m97[0m     seen: Map<schemas.$ZodType, Seen>;
+[7m  [0m [91m          ~~~[0m
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/util.d.cts[0m:[93m67[0m:[93m15[0m - [91merror[0m[90m TS2585: [0m'Symbol' only refers to a type, but is being used as a value here. Do you need to change your target library? Try changing the 'lib' compiler option to es2015 or later.
+
+[7m67[0m     readonly [Symbol.toStringTag]: string;
+[7m  [0m [91m              ~~~~~~[0m
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/util.d.cts[0m:[93m68[0m:[93m20[0m - [91merror[0m[90m TS2304: [0mCannot find name 'Generator'.
+
+[7m68[0m } | Date | Error | Generator | Promise<unknown> | RegExp;
+[7m  [0m [91m                   ~~~~~~~~~[0m
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/util.d.cts[0m:[93m69[0m:[93m41[0m - [91merror[0m[90m TS2583: [0mCannot find name 'Map'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+
+[7m69[0m export type MakeReadonly<T> = T extends Map<infer K, infer V> ? ReadonlyMap<K, V> : T extends Set<infer V> ? ReadonlySet<V> : T extends [infer Head, ...infer Tail] ? readonly [Head, ...Tail] : T extends Array<infer V> ? ReadonlyArray<V> : T extends BuiltIn ? T : Readonly<T>;
+[7m  [0m [91m                                        ~~~[0m
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/util.d.cts[0m:[93m69[0m:[93m65[0m - [91merror[0m[90m TS2552: [0mCannot find name 'ReadonlyMap'. Did you mean 'Readonly'?
+
+[7m69[0m export type MakeReadonly<T> = T extends Map<infer K, infer V> ? ReadonlyMap<K, V> : T extends Set<infer V> ? ReadonlySet<V> : T extends [infer Head, ...infer Tail] ? readonly [Head, ...Tail] : T extends Array<infer V> ? ReadonlyArray<V> : T extends BuiltIn ? T : Readonly<T>;
+[7m  [0m [91m                                                                ~~~~~~~~~~~[0m
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/util.d.cts[0m:[93m69[0m:[93m95[0m - [91merror[0m[90m TS2583: [0mCannot find name 'Set'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+
+[7m69[0m export type MakeReadonly<T> = T extends Map<infer K, infer V> ? ReadonlyMap<K, V> : T extends Set<infer V> ? ReadonlySet<V> : T extends [infer Head, ...infer Tail] ? readonly [Head, ...Tail] : T extends Array<infer V> ? ReadonlyArray<V> : T extends BuiltIn ? T : Readonly<T>;
+[7m  [0m [91m                                                                                              ~~~[0m
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/util.d.cts[0m:[93m69[0m:[93m110[0m - [91merror[0m[90m TS2304: [0mCannot find name 'ReadonlySet'.
+
+[7m69[0m export type MakeReadonly<T> = T extends Map<infer K, infer V> ? ReadonlyMap<K, V> : T extends Set<infer V> ? ReadonlySet<V> : T extends [infer Head, ...infer Tail] ? readonly [Head, ...Tail] : T extends Array<infer V> ? ReadonlyArray<V> : T extends BuiltIn ? T : Readonly<T>;
+[7m  [0m [91m                                                                                                             ~~~~~~~~~~~[0m
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/util.d.cts[0m:[93m136[0m:[93m41[0m - [91merror[0m[90m TS2583: [0mCannot find name 'Set'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+
+[7m136[0m export type PropValues = Record<string, Set<Primitive>>;
+[7m   [0m [91m                                        ~~~[0m
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/util.d.cts[0m:[93m137[0m:[93m28[0m - [91merror[0m[90m TS2583: [0mCannot find name 'Set'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+
+[7m137[0m export type PrimitiveSet = Set<Primitive>;
+[7m   [0m [91m                           ~~~[0m
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/util.d.cts[0m:[93m185[0m:[93m40[0m - [91merror[0m[90m TS2583: [0mCannot find name 'Set'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+
+[7m185[0m export declare const propertyKeyTypes: Set<string>;
+[7m   [0m [91m                                       ~~~[0m
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/util.d.cts[0m:[93m186[0m:[93m38[0m - [91merror[0m[90m TS2583: [0mCannot find name 'Set'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+
+[7m186[0m export declare const primitiveTypes: Set<string>;
+[7m   [0m [91m                                     ~~~[0m
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m1[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ar"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m1[0m export { default as ar } from "./ar.cjs";
+[7m [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ar.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m2[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/az"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m2[0m export { default as az } from "./az.cjs";
+[7m [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/az.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m3[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/be"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m3[0m export { default as be } from "./be.cjs";
+[7m [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/be.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m4[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/bg"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m4[0m export { default as bg } from "./bg.cjs";
+[7m [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/bg.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m5[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/bn"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m5[0m export { default as bn } from "./bn.cjs";
+[7m [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/bn.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m6[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ca"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m6[0m export { default as ca } from "./ca.cjs";
+[7m [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ca.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m7[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ckb"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m7[0m export { default as ckb } from "./ckb.cjs";
+[7m [0m [91m                    ~~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ckb.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m8[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/cs"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m8[0m export { default as cs } from "./cs.cjs";
+[7m [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/cs.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m9[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/da"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m9[0m export { default as da } from "./da.cjs";
+[7m [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/da.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m10[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/de"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m10[0m export { default as de } from "./de.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/de.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m11[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/el"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m11[0m export { default as el } from "./el.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/el.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m12[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/en"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m12[0m export { default as en } from "./en.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/en.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m13[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/eo"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m13[0m export { default as eo } from "./eo.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/eo.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m14[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/es"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m14[0m export { default as es } from "./es.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/es.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m15[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/fa"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m15[0m export { default as fa } from "./fa.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/fa.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m16[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/fi"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m16[0m export { default as fi } from "./fi.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/fi.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m17[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/fr"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m17[0m export { default as fr } from "./fr.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/fr.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m18[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/fr-CA"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m18[0m export { default as frCA } from "./fr-CA.cjs";
+[7m  [0m [91m                    ~~~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/fr-CA.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m19[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/gu"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m19[0m export { default as gu } from "./gu.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/gu.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m20[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/he"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m20[0m export { default as he } from "./he.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/he.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m21[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/hi"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m21[0m export { default as hi } from "./hi.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/hi.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m22[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/hr"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m22[0m export { default as hr } from "./hr.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/hr.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m23[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/hu"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m23[0m export { default as hu } from "./hu.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/hu.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m24[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/hy"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m24[0m export { default as hy } from "./hy.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/hy.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m25[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/id"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m25[0m export { default as id } from "./id.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/id.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m26[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/is"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m26[0m export { default as is } from "./is.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/is.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m27[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/it"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m27[0m export { default as it } from "./it.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/it.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m28[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ja"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m28[0m export { default as ja } from "./ja.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ja.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m29[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ka"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m29[0m export { default as ka } from "./ka.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ka.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m30[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/kh"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m30[0m export { default as kh } from "./kh.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/kh.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m31[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/km"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m31[0m export { default as km } from "./km.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/km.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m32[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/kn"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m32[0m export { default as kn } from "./kn.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/kn.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m33[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ko"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m33[0m export { default as ko } from "./ko.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ko.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m34[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/lt"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m34[0m export { default as lt } from "./lt.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/lt.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m35[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/mk"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m35[0m export { default as mk } from "./mk.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/mk.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m36[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ms"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m36[0m export { default as ms } from "./ms.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ms.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m37[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ne"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m37[0m export { default as ne } from "./ne.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ne.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m38[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/nl"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m38[0m export { default as nl } from "./nl.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/nl.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m39[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/nn"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m39[0m export { default as nn } from "./nn.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/nn.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m40[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/no"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m40[0m export { default as no } from "./no.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/no.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m41[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ota"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m41[0m export { default as ota } from "./ota.cjs";
+[7m  [0m [91m                    ~~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ota.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m42[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ps"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m42[0m export { default as ps } from "./ps.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ps.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m43[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/pl"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m43[0m export { default as pl } from "./pl.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/pl.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m44[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/pt"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m44[0m export { default as pt } from "./pt.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/pt.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m45[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/pt-BR"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m45[0m export { default as ptBR } from "./pt-BR.cjs";
+[7m  [0m [91m                    ~~~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/pt-BR.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m46[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ro"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m46[0m export { default as ro } from "./ro.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ro.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m47[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ru"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m47[0m export { default as ru } from "./ru.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ru.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m48[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/sk"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m48[0m export { default as sk } from "./sk.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/sk.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m49[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/sl"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m49[0m export { default as sl } from "./sl.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/sl.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m50[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/sv"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m50[0m export { default as sv } from "./sv.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/sv.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m51[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ta"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m51[0m export { default as ta } from "./ta.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ta.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m52[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/tg"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m52[0m export { default as tg } from "./tg.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/tg.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m53[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/th"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m53[0m export { default as th } from "./th.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/th.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m54[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/tk"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m54[0m export { default as tk } from "./tk.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/tk.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m55[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/tr"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m55[0m export { default as tr } from "./tr.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/tr.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m56[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ua"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m56[0m export { default as ua } from "./ua.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ua.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m57[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/uk"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m57[0m export { default as uk } from "./uk.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/uk.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m58[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ur"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m58[0m export { default as ur } from "./ur.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/ur.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m59[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/uz"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m59[0m export { default as uz } from "./uz.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/uz.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m60[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/vi"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m60[0m export { default as vi } from "./vi.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/vi.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m61[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/zh-CN"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m61[0m export { default as zhCN } from "./zh-CN.cjs";
+[7m  [0m [91m                    ~~~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/zh-CN.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m62[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/zh-TW"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m62[0m export { default as zhTW } from "./zh-TW.cjs";
+[7m  [0m [91m                    ~~~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/zh-TW.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[0m:[93m63[0m:[93m21[0m - [91merror[0m[90m TS1259: [0mModule '"/Users/muktakumari/Downloads/web-builder/node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/yo"' can only be default-imported using the 'esModuleInterop' flag
+
+[7m63[0m export { default as yo } from "./yo.cjs";
+[7m  [0m [91m                    ~~[0m
+
+  [96m../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/yo.d.cts[0m:[93m5[0m:[93m1[0m
+    [7m5[0m export = _default;
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~[0m
+    This module is declared with 'export =', and can only be used with a default import when using the 'esModuleInterop' flag.
+
+[96msrc/index.ts[0m:[93m3[0m:[93m31[0m - [91merror[0m[90m TS2307: [0mCannot find module '@visual-builder/document-schema' or its corresponding type declarations.
+  There are types at '/Users/muktakumari/Downloads/web-builder/packages/component-registry/node_modules/@visual-builder/document-schema/src/index.ts', but this result could not be resolved under your current 'moduleResolution' setting. Consider updating to 'node16', 'nodenext', or 'bundler'.
+
+[7m3[0m import type { PageNode } from "@visual-builder/document-schema";
+[7m [0m [91m                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+Found 90 errors in 10 files.
+
+Errors  Files
+     1  ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/classic/schemas.d.cts[90m:623[0m
+     2  ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/checks.d.cts[90m:266[0m
+     1  ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/json-schema-generator.d.cts[90m:52[0m
+     1  ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/json-schema-processors.d.cts[90m:13[0m
+     2  ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/registries.d.cts[90m:16[0m
+     8  ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/schemas.d.cts[90m:61[0m
+     1  ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/to-json-schema.d.cts[90m:97[0m
+    10  ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/util.d.cts[90m:67[0m
+    63  ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/index.d.cts[90m:1[0m
+     1  src/index.ts[90m:3[0m
+[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 2.[39m

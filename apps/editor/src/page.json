@@ -1,0 +1,39 @@
+{
+  "components": [
+    {
+      "id": "heading-1",
+      "type": "heading",
+      "props": {
+        "text": "Build Something Amazing"
+      },
+      "styles": {
+        "color": "#7c3aed",
+        "fontSize": "36px"
+      }
+    },
+    {
+      "id": "text-1",
+      "type": "text",
+      "props": {
+        "text": "Create your own website with our visual builder."
+      },
+      "styles": {
+        "color": "#6b7280",
+        "fontSize": "18px"
+      }
+    },
+    {
+      "id": "button-1",
+      "type": "button",
+      "props": {
+        "text": "Get Started"
+      },
+      "styles": {
+        "backgroundColor": "#7c3aed",
+        "color": "#ffffff",
+        "padding": "12px 24px",
+        "borderRadius": "8px"
+      }
+    }
+  ]
+}
