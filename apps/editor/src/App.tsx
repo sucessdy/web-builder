@@ -211,7 +211,11 @@ function App() {
   const [modal, setModal] = useState(false);
   const [zoom, setZoom] = useState(100);
   const [search, setSearch] = useState("");
-  const active = items.find((item) => item.id === selected) ?? items[0];
+  const selectedId = items.some((item) => item.id === selected)
+  ? selected
+  : (items[0]?.id ?? "");
+const active = items.find((item) => item.id === selectedId) ?? items[0];
+
   const filteredItems = useMemo(
     () =>
       items.filter((item) =>
@@ -226,10 +230,10 @@ function App() {
     }, 450);
     return () => window.clearTimeout(timer);
   }, [items]);
-  useEffect(() => {
-    if (items.length && !items.some((item) => item.id === selected))
-      setSelected(items[0].id);
-  }, [items, selected]);
+
+  
+
+
   const commit = (next: Item[]) => {
     setUndoStack((stack) => [...stack.slice(-29), items]);
     setRedoStack([]);
@@ -242,7 +246,7 @@ function App() {
   ) => {
     commit(
       items.map((item) =>
-        item.id === selected ? { ...item, [key]: value } : item,
+        item.id === selectedId ? { ...item, [key]: value } : item,
       ),
     );
   };
@@ -303,11 +307,14 @@ function App() {
     setSelected(id);
     setTab("layers");
   };
-  const removeItem = () => {
-    if (items.length <= 1) return;
-    commit(items.filter((item) => item.id !== selected));
-    setSelected(items.find((item) => item.id !== selected)?.id ?? "nav");
-  };
+
+
+const removeItem = () => {
+  if (items.length <= 1) return;
+  const next = items.filter((item) => item.id !== selectedId);
+  commit(next);
+  setSelected(next[0]?.id ?? "");
+};
   const iconFor = (type: Kind) =>
     type === "heading"
       ? "type"
@@ -453,7 +460,7 @@ function App() {
                 {filteredItems.map((item) => (
                   <button
                     key={item.id}
-                    className={`layer-row ${selected === item.id ? "selected" : ""}`}
+                    className={`layer-row ${selectedId === item.id ? "selected" : ""}`}
                     onClick={() => {
                       setSelected(item.id);
                       setInspectorTab("style");
@@ -593,7 +600,7 @@ function App() {
               style={{ transform: `scale(${zoom / 100})` }}
             >
               <div
-                className={`site-nav ${selected === "nav" && !preview ? "element-selected" : ""}`}
+                className={`site-nav ${selectedId === "nav" && !preview ? "element-selected" : ""}`}
                 onClick={() => !preview && setSelected("nav")}
               >
                 <span className="site-wordmark">
@@ -614,7 +621,7 @@ function App() {
               </div>
               {items.find((i) => i.id === "eyebrow")?.visible !== false && (
                 <div
-                  className={`hero-eyebrow selectable ${selected === "eyebrow" && !preview ? "element-selected" : ""}`}
+                  className={`hero-eyebrow selectable ${selectedId === "eyebrow" && !preview ? "element-selected" : ""}`}
                   onClick={() => !preview && setSelected("eyebrow")}
                 >
                   <span className="eyebrow-line" />
@@ -623,7 +630,7 @@ function App() {
               )}
               {items.find((i) => i.id === "title")?.visible !== false && (
                 <h2
-                  className={`hero-title selectable ${selected === "title" && !preview ? "element-selected" : ""}`}
+                  className={`hero-title selectable ${selectedId === "title" && !preview ? "element-selected" : ""}`}
                   style={{
                     color: items.find((i) => i.id === "title")?.color,
                     fontSize: items.find((i) => i.id === "title")?.fontSize
@@ -645,7 +652,7 @@ function App() {
               )}
               {items.find((i) => i.id === "body")?.visible !== false && (
                 <p
-                  className={`hero-copy selectable ${selected === "body" && !preview ? "element-selected" : ""}`}
+                  className={`hero-copy selectable ${selectedId === "body" && !preview ? "element-selected" : ""}`}
                   style={{
                     color: items.find((i) => i.id === "body")?.color,
                     fontSize: items.find((i) => i.id === "body")?.fontSize
@@ -659,7 +666,7 @@ function App() {
               )}
               {items.find((i) => i.id === "cta")?.visible !== false && (
                 <button
-                  className={`hero-cta selectable ${selected === "cta" && !preview ? "element-selected" : ""}`}
+                  className={`hero-cta selectable ${selectedId === "cta" && !preview ? "element-selected" : ""}`}
                   style={{ color: items.find((i) => i.id === "cta")?.color }}
                   onClick={() => !preview && setSelected("cta")}
                 >
@@ -669,7 +676,7 @@ function App() {
               )}
               {items.find((i) => i.id === "hero-image")?.visible !== false && (
                 <div
-                  className={`hero-art selectable ${selected === "hero-image" && !preview ? "element-selected" : ""}`}
+                  className={`hero-art selectable ${selectedId === "hero-image" && !preview ? "element-selected" : ""}`}
                   onClick={() => !preview && setSelected("hero-image")}
                   aria-label="Decorative abstract artwork"
                 >
@@ -698,7 +705,7 @@ function App() {
                 .map((item) => (
                   <div
                     key={item.id}
-                    className={`added-element selectable ${item.type} ${selected === item.id && !preview ? "element-selected" : ""}`}
+                    className={`added-element selectable ${item.type} ${selectedId === item.id && !preview ? "element-selected" : ""}`}
                     onClick={() => !preview && setSelected(item.id)}
                   >
                     {item.type === "image" ? (
