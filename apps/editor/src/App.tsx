@@ -1,5 +1,10 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { Canvas, createCanvasDocument } from "./features/canvas/Canvas";
+import {type WorkspaceMember } from "./features/auth/AuthProvider";
+import { generatePageFromPrompt } from "./lib/ai-generator";
+import { buildPageSource } from "./lib/code-export";
 import "./App.css";
+import { useAuth } from "./features/auth/useAuth";
 
 type Kind = "section" | "heading" | "text" | "button" | "image";
 type Item = {
@@ -10,6 +15,9 @@ type Item = {
   visible: boolean;
   color?: string;
   fontSize?: number;
+  src?: string;
+  href?: string;
+  variant?: "primary" | "secondary" | "outline";
 };
 type Tab = "layers" | "blocks";
 
@@ -171,6 +179,17 @@ const Icon = ({ name, size = 18 }: { name: string; size?: number }) => {
       </>
     ),
     check: <path d="m5 12 4 4L19 6" />,
+    sparkles: (
+      <>
+        <path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z" />
+        <path d="m19 14 .9 2.1L22 17l-2.1.9L19 20l-.9-2.1L16 17l2.1-.9L19 14ZM5 3l.8 1.7L7.5 5.5l-1.7.8L5 8l-.8-1.7L2.5 5.5l1.7-.8L5 3Z" />
+      </>
+    ),
+    code: (
+      <>
+        <path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14" />
+      </>
+    ),
   };
   return (
     <svg
@@ -190,9 +209,15 @@ const Icon = ({ name, size = 18 }: { name: string; size?: number }) => {
 };
 
 function App() {
+  const { enabled: authEnabled, user, canEdit, canShare, canPublish, canManageMembers, listMembers, inviteMember, switchWorkspace, signOut, notice: authNotice } = useAuth();
+  const workspaceKey = user.workspaceId || user.id;
+  const storageKey = `canvas-builder-page:${workspaceKey}`;
+  const lastWorkspaceKey = useRef(workspaceKey);
   const [items, setItems] = useState<Item[]>(() => {
     try {
-      const stored = localStorage.getItem("canvas-builder-page");
+      const stored = localStorage.getItem(storageKey)
+        ?? localStorage.getItem(`canvas-builder-page:${user.id}`)
+        ?? (!authEnabled ? localStorage.getItem("canvas-builder-page") : null);
       return stored ? (JSON.parse(stored) as Item[]) : initialItems;
     } catch {
       return initialItems;
@@ -209,6 +234,17 @@ function App() {
   const [preview, setPreview] = useState(false);
   const [saved, setSaved] = useState(true);
   const [modal, setModal] = useState(false);
+  const [aiModal, setAiModal] = useState(false);
+  const [aiPrompt, setAiPrompt] = useState("");
+  const [generating, setGenerating] = useState(false);
+  const [generationNotice, setGenerationNotice] = useState("");
+  const [exportModal, setExportModal] = useState(false);
+  const [membersModal, setMembersModal] = useState(false);
+  const [members, setMembers] = useState<WorkspaceMember[]>([]);
+  const [memberEmail, setMemberEmail] = useState("");
+  const [memberRole, setMemberRole] = useState<"editor" | "viewer">("editor");
+  const [memberMessage, setMemberMessage] = useState("");
+  const [exportTarget, setExportTarget] = useState<"react" | "next">("next");
   const [zoom, setZoom] = useState(100);
   const [search, setSearch] = useState("");
   const selectedId = items.some((item) => item.id === selected)
@@ -225,25 +261,72 @@ const active = items.find((item) => item.id === selectedId) ?? items[0];
   );
   useEffect(() => {
     const timer = window.setTimeout(() => {
-      localStorage.setItem("canvas-builder-page", JSON.stringify(items));
+      localStorage.setItem(storageKey, JSON.stringify(items));
       setSaved(true);
     }, 450);
     return () => window.clearTimeout(timer);
-  }, [items]);
+  }, [items, storageKey]);
+
+  useEffect(() => {
+    if (lastWorkspaceKey.current === workspaceKey) return;
+    lastWorkspaceKey.current = workspaceKey;
+    let nextItems = initialItems;
+    try {
+      const stored = localStorage.getItem(storageKey);
+      if (stored) nextItems = JSON.parse(stored) as Item[];
+    } catch {
+      nextItems = initialItems;
+    }
+    setItems(nextItems);
+    setUndoStack([]);
+    setRedoStack([]);
+    setSelected("title");
+    setTab("layers");
+  }, [storageKey, workspaceKey]);
+
+  useEffect(() => {
+    if (authNotice) setGenerationNotice(authNotice);
+  }, [authNotice]);
 
   
 
 
   const commit = (next: Item[]) => {
+    if (!canEdit) return;
     setUndoStack((stack) => [...stack.slice(-29), items]);
     setRedoStack([]);
     setSaved(false);
     setItems(next);
   };
+  const generateFromPrompt = async () => {
+    if (!canEdit) return;
+    if (!aiPrompt.trim()) return;
+    setGenerating(true);
+    setGenerationNotice("");
+    try {
+      const result = await generatePageFromPrompt(aiPrompt.trim());
+      commit(result.items);
+      setSelected("title");
+      setTab("layers");
+      setAiModal(false);
+      setGenerationNotice(
+        result.mode === "endpoint"
+          ? "AI generated a new page from your brief."
+          : "Draft created locally. Connect an AI endpoint for model-generated pages.",
+      );
+    } catch (error) {
+      setGenerationNotice(
+        error instanceof Error ? error.message : "Could not generate the page.",
+      );
+    } finally {
+      setGenerating(false);
+    }
+  };
   const update = (
     key: "name" | "text" | "color" | "fontSize",
     value: string | number,
   ) => {
+    if (!canEdit) return;
     commit(
       items.map((item) =>
         item.id === selectedId ? { ...item, [key]: value } : item,
@@ -251,6 +334,7 @@ const active = items.find((item) => item.id === selectedId) ?? items[0];
     );
   };
   const undo = () => {
+    if (!canEdit) return;
     const previous = undoStack.at(-1);
     if (!previous) return;
     setRedoStack((stack) => [...stack, items]);
@@ -259,6 +343,7 @@ const active = items.find((item) => item.id === selectedId) ?? items[0];
     setSaved(false);
   };
   const redo = () => {
+    if (!canEdit) return;
     const next = redoStack.at(-1);
     if (!next) return;
     setUndoStack((stack) => [...stack, items]);
@@ -278,7 +363,40 @@ const active = items.find((item) => item.id === selectedId) ?? items[0];
     link.click();
     window.setTimeout(() => URL.revokeObjectURL(url), 0);
   };
+  const exportCode = () => {
+    const pageDocument = createCanvasDocument(items);
+    const source = buildPageSource(pageDocument, exportTarget);
+    const file = new Blob([source], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(file);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = exportTarget === "next" ? "app-page.tsx" : "Page.tsx";
+    link.click();
+    window.setTimeout(() => URL.revokeObjectURL(url), 0);
+    setExportModal(false);
+  };
+  const openMembers = async () => {
+    setMembersModal(true);
+    setMemberMessage("");
+    try {
+      setMembers(await listMembers());
+    } catch (error) {
+      setMemberMessage(error instanceof Error ? error.message : "Could not load workspace members.");
+    }
+  };
+  const saveMember = async () => {
+    setMemberMessage("");
+    try {
+      await inviteMember(memberEmail, memberRole);
+      setMembers(await listMembers());
+      setMemberEmail("");
+      setMemberMessage("Appwrite invitation sent. They’ll appear as a member after accepting it.");
+    } catch (error) {
+      setMemberMessage(error instanceof Error ? error.message : "Could not update access.");
+    }
+  };
   const addItem = (type: Kind) => {
+    if (!canEdit) return;
     const labels: Record<Kind, string> = {
       section: "Section",
       heading: "Heading",
@@ -310,6 +428,7 @@ const active = items.find((item) => item.id === selectedId) ?? items[0];
 
 
 const removeItem = () => {
+  if (!canEdit) return;
   if (items.length <= 1) return;
   const next = items.filter((item) => item.id !== selectedId);
   commit(next);
@@ -352,7 +471,7 @@ const removeItem = () => {
             className="icon-button"
             title="Undo"
             onClick={undo}
-            disabled={!undoStack.length}
+            disabled={!canEdit || !undoStack.length}
           >
             <Icon name="undo" size={17} />
           </button>
@@ -360,16 +479,17 @@ const removeItem = () => {
             className="icon-button"
             title="Redo"
             onClick={redo}
-            disabled={!redoStack.length}
+            disabled={!canEdit || !redoStack.length}
           >
             <Icon name="redo" size={17} />
           </button>
           <span className="top-separator" />
-          <button className="share-button" onClick={() => setModal(true)}>
+          <button className="share-button" onClick={() => setModal(true)} disabled={!canShare}>
             Share
           </button>
           <button
             className="publish-button"
+            disabled={!canPublish}
             onClick={() => {
               setSaved(true);
               setModal(true);
@@ -377,7 +497,17 @@ const removeItem = () => {
           >
             <Icon name="check" size={15} /> Publish
           </button>
-          <div className="avatar">M</div>
+          <button
+            className="avatar account-avatar"
+            title={authEnabled ? `Signed in as ${user.email}. Click to sign out.` : "Local preview account"}
+            onClick={() => {
+              if (authEnabled) void signOut().catch((error: unknown) => {
+                setGenerationNotice(error instanceof Error ? error.message : "Could not sign out.");
+              });
+            }}
+          >
+            {(user.name?.[0] ?? user.email[0] ?? "M").toUpperCase()}
+          </button>
         </div>
       </header>
 
@@ -392,6 +522,14 @@ const removeItem = () => {
             onClick={() => setTab("blocks")}
           >
             <Icon name="plus" />
+          </button>
+          <button
+            className="rail-button ai-rail-button"
+            title="Generate a website with AI"
+            disabled={!canEdit}
+            onClick={() => setAiModal(true)}
+          >
+            <Icon name="sparkles" />
           </button>
           <button className="rail-button" title="Assets">
             <Icon name="image" />
@@ -411,7 +549,7 @@ const removeItem = () => {
                 Pages <span className="page-count">1</span>
               </h1>
             </div>
-            <button className="small-icon-button" title="Add page">
+            <button className="small-icon-button" title="Add page" disabled={!canEdit}>
               <Icon name="plus" size={17} />
             </button>
           </div>
@@ -451,6 +589,7 @@ const removeItem = () => {
                 <span>HOME PAGE</span>
                 <button
                   className="plain-icon"
+                  disabled={!canEdit}
                   onClick={() => addItem("section")}
                 >
                   <Icon name="plus" size={15} />
@@ -472,7 +611,7 @@ const removeItem = () => {
                     <Icon name={iconFor(item.type)} size={15} />
                     <span className="layer-name">{item.name}</span>
                     <span
-                      className="layer-more"
+                      className={`layer-more ${!canEdit ? "is-disabled" : ""}`}
                       onClick={(e) => {
                         e.stopPropagation();
                         commit(
@@ -509,6 +648,7 @@ const removeItem = () => {
                   <button
                     className="block-card"
                     key={type}
+                    disabled={!canEdit}
                     onClick={() => addItem(type)}
                   >
                     <span className={`block-icon ${type}`}>
@@ -536,12 +676,29 @@ const removeItem = () => {
           )}
           <div className="left-panel-bottom">
             <div className="workspace-user">
-              <div className="avatar small">M</div>
+              <div className="avatar small">{(user.name?.[0] ?? user.email[0] ?? "M").toUpperCase()}</div>
               <div>
-                <b>Mukta's workspace</b>
-                <span>Free plan</span>
+                {authEnabled && user.workspaces.length > 1 ? (
+                  <select
+                    className="workspace-select"
+                    aria-label="Switch workspace"
+                    value={user.workspaceId}
+                    onChange={(event) => void switchWorkspace(event.target.value).catch((error: unknown) => {
+                      setGenerationNotice(error instanceof Error ? error.message : "Could not switch workspace.");
+                    })}
+                  >
+                    {user.workspaces.map((workspace) => (
+                      <option key={workspace.id} value={workspace.id}>{workspace.name} · {workspace.role}</option>
+                    ))}
+                  </select>
+                ) : (
+                  <b>{authEnabled ? user.workspaceName : "Local preview"}</b>
+                )}
+                <span>{authEnabled ? `${user.role} · workspace` : "Not signed in"}</span>
               </div>
-              <Icon name="more" size={17} />
+              <button className="workspace-access-button" disabled={!canManageMembers} title="Manage workspace access" onClick={() => void openMembers()}>
+                Access
+              </button>
             </div>
           </div>
         </aside>
@@ -592,6 +749,13 @@ const removeItem = () => {
               >
                 <Icon name="download" size={16} />
               </button>
+              <button
+                className="tool-button"
+                title="Export React or Next.js code"
+                onClick={() => setExportModal(true)}
+              >
+                <Icon name="code" size={16} />
+              </button>
             </div>
           </div>
           <div className="canvas-stage">
@@ -599,137 +763,12 @@ const removeItem = () => {
               className={`page-canvas ${device === "mobile" ? "mobile-canvas" : ""} ${preview ? "preview-mode" : ""}`}
               style={{ transform: `scale(${zoom / 100})` }}
             >
-              <div
-                className={`site-nav ${selectedId === "nav" && !preview ? "element-selected" : ""}`}
-                onClick={() => !preview && setSelected("nav")}
-              >
-                <span className="site-wordmark">
-                  {items
-                    .find((i) => i.id === "nav")
-                    ?.text.split("/")[0]
-                    .trim() ?? "NORTH"}
-                  <span className="wordmark-dot">.</span>
-                </span>
-                <div className="nav-links">
-                  <span>About</span>
-                  <span>Projects</span>
-                  <span>Journal</span>
-                </div>
-                <button className="nav-contact">
-                  Let's talk <span>↗</span>
-                </button>
-              </div>
-              {items.find((i) => i.id === "eyebrow")?.visible !== false && (
-                <div
-                  className={`hero-eyebrow selectable ${selectedId === "eyebrow" && !preview ? "element-selected" : ""}`}
-                  onClick={() => !preview && setSelected("eyebrow")}
-                >
-                  <span className="eyebrow-line" />
-                  {items.find((i) => i.id === "eyebrow")?.text}
-                </div>
-              )}
-              {items.find((i) => i.id === "title")?.visible !== false && (
-                <h2
-                  className={`hero-title selectable ${selectedId === "title" && !preview ? "element-selected" : ""}`}
-                  style={{
-                    color: items.find((i) => i.id === "title")?.color,
-                    fontSize: items.find((i) => i.id === "title")?.fontSize
-                      ? `${items.find((i) => i.id === "title")?.fontSize}px`
-                      : undefined,
-                  }}
-                  onClick={() => !preview && setSelected("title")}
-                >
-                  {items
-                    .find((i) => i.id === "title")
-                    ?.text.split("\n")
-                    .map((line, index) => (
-                      <span key={index}>
-                        {line}
-                        <br />
-                      </span>
-                    ))}
-                </h2>
-              )}
-              {items.find((i) => i.id === "body")?.visible !== false && (
-                <p
-                  className={`hero-copy selectable ${selectedId === "body" && !preview ? "element-selected" : ""}`}
-                  style={{
-                    color: items.find((i) => i.id === "body")?.color,
-                    fontSize: items.find((i) => i.id === "body")?.fontSize
-                      ? `${items.find((i) => i.id === "body")?.fontSize}px`
-                      : undefined,
-                  }}
-                  onClick={() => !preview && setSelected("body")}
-                >
-                  {items.find((i) => i.id === "body")?.text}
-                </p>
-              )}
-              {items.find((i) => i.id === "cta")?.visible !== false && (
-                <button
-                  className={`hero-cta selectable ${selectedId === "cta" && !preview ? "element-selected" : ""}`}
-                  style={{ color: items.find((i) => i.id === "cta")?.color }}
-                  onClick={() => !preview && setSelected("cta")}
-                >
-                  {items.find((i) => i.id === "cta")?.text}
-                  <span>↗</span>
-                </button>
-              )}
-              {items.find((i) => i.id === "hero-image")?.visible !== false && (
-                <div
-                  className={`hero-art selectable ${selectedId === "hero-image" && !preview ? "element-selected" : ""}`}
-                  onClick={() => !preview && setSelected("hero-image")}
-                  aria-label="Decorative abstract artwork"
-                >
-                  <div className="art-sun" />
-                  <div className="art-orbit orbit-one" />
-                  <div className="art-orbit orbit-two" />
-                  <div className="art-shape shape-one" />
-                  <div className="art-shape shape-two" />
-                  <div className="art-shape shape-three" />
-                  <span className="art-caption">FIG. 01 — FORM STUDIES</span>
-                  <div className="art-spark">✳</div>
-                </div>
-              )}
-              {items
-                .filter(
-                  (item) =>
-                    ![
-                      "nav",
-                      "eyebrow",
-                      "title",
-                      "body",
-                      "cta",
-                      "hero-image",
-                    ].includes(item.id) && item.visible,
-                )
-                .map((item) => (
-                  <div
-                    key={item.id}
-                    className={`added-element selectable ${item.type} ${selectedId === item.id && !preview ? "element-selected" : ""}`}
-                    onClick={() => !preview && setSelected(item.id)}
-                  >
-                    {item.type === "image" ? (
-                      <div className="added-image">
-                        <Icon name="image" size={20} />
-                        <span>{item.text}</span>
-                      </div>
-                    ) : item.type === "button" ? (
-                      <button className="hero-cta">
-                        {item.text}
-                        <span>↗</span>
-                      </button>
-                    ) : item.type === "heading" ? (
-                      <h3>{item.text}</h3>
-                    ) : (
-                      item.text
-                    )}
-                  </div>
-                ))}
-              <div className="hero-footer">
-                <span>SCROLL TO EXPLORE</span>
-                <span className="footer-rule" />
-                <span>01 — 04</span>
-              </div>
+              <Canvas
+                items={items}
+                selectedId={selectedId}
+                preview={preview}
+                onSelect={(id) => !preview && setSelected(id)}
+              />
             </div>
             <div className="canvas-outside-label">
               Designed with{" "}
@@ -780,7 +819,7 @@ const removeItem = () => {
                   <Icon name={iconFor(active?.type ?? "heading")} size={14} />
                 </span>
                 <span>{active?.type ?? "element"}</span>
-                <button title="Delete selected element" onClick={removeItem}>
+                <button title="Delete selected element" disabled={!canEdit} onClick={removeItem}>
                   <Icon name="close" size={14} />
                 </button>
               </div>
@@ -849,6 +888,7 @@ const removeItem = () => {
                       type="number"
                       min="8"
                       max="144"
+                      disabled={!canEdit}
                       value={
                         active?.fontSize ??
                         (active?.type === "heading" ? 72 : 16)
@@ -876,6 +916,7 @@ const removeItem = () => {
                   <input
                     aria-label="Text color"
                     type="color"
+                    disabled={!canEdit}
                     value={active?.color ?? "#20231f"}
                     onChange={(e) => update("color", e.target.value)}
                   />
@@ -890,6 +931,7 @@ const removeItem = () => {
                 Layer name
                 <input
                   value={active?.name ?? ""}
+                  disabled={!canEdit}
                   onChange={(e) => update("name", e.target.value)}
                 />
               </label>
@@ -902,6 +944,7 @@ const removeItem = () => {
                 <textarea
                   rows={4}
                   value={active?.text ?? ""}
+                  disabled={!canEdit}
                   onChange={(e) => update("text", e.target.value)}
                 />
               </label>
@@ -915,6 +958,132 @@ const removeItem = () => {
           </div>
         </aside>
       </div>
+      {aiModal && (
+        <div className="modal-backdrop" onClick={() => !generating && setAiModal(false)}>
+          <section
+            className="builder-modal ai-builder-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="ai-builder-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              className="modal-close"
+              aria-label="Close AI builder"
+              disabled={generating}
+              onClick={() => setAiModal(false)}
+            >
+              <Icon name="close" size={17} />
+            </button>
+            <div className="modal-mark ai-modal-mark">
+              <Icon name="sparkles" size={20} />
+            </div>
+            <h2 id="ai-builder-title">What should we build?</h2>
+            <p>Describe the business, audience, and style. You can edit every layer after the first draft.</p>
+            <label className="field-label ai-prompt-label">
+              Website brief
+              <textarea
+                autoFocus
+                rows={5}
+                placeholder="A warm, modern website for a neighborhood coffee shop…"
+                value={aiPrompt}
+                onChange={(event) => setAiPrompt(event.target.value)}
+                onKeyDown={(event) => {
+                  if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+                    void generateFromPrompt();
+                  }
+                }}
+              />
+            </label>
+            <div className="ai-connection-note">
+              No AI provider is connected yet. This version creates an editable local draft; connect a server endpoint to use a language model.
+            </div>
+            {generationNotice && aiModal && (
+              <p className="ai-error" role="status">{generationNotice}</p>
+            )}
+            <button
+              className="modal-primary ai-generate-button"
+              disabled={!aiPrompt.trim() || generating}
+              onClick={() => void generateFromPrompt()}
+            >
+              <Icon name="sparkles" size={15} />
+              {generating ? "Building your first draft…" : "Generate website"}
+            </button>
+          </section>
+        </div>
+      )}
+      {exportModal && (
+        <div className="modal-backdrop" onClick={() => setExportModal(false)}>
+          <section
+            className="builder-modal export-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="export-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              className="modal-close"
+              aria-label="Close export options"
+              onClick={() => setExportModal(false)}
+            >
+              <Icon name="close" size={17} />
+            </button>
+            <div className="eyebrow-label">CODE EXPORT</div>
+            <h2 id="export-title">Choose your React setup</h2>
+            <p>Download a self-contained, typed page component with responsive base styles.</p>
+            <div className="export-options">
+              <button
+                className={exportTarget === "react" ? "export-option selected" : "export-option"}
+                onClick={() => setExportTarget("react")}
+              >
+                <b>React</b><span>src/Page.tsx</span>
+              </button>
+              <button
+                className={exportTarget === "next" ? "export-option selected" : "export-option"}
+                onClick={() => setExportTarget("next")}
+              >
+                <b>Next.js</b><span>app/page.tsx</span>
+              </button>
+            </div>
+            <button className="modal-primary" onClick={exportCode}>
+              <Icon name="download" size={15} /> Download page source
+            </button>
+          </section>
+        </div>
+      )}
+      {membersModal && (
+        <div className="modal-backdrop" onClick={() => setMembersModal(false)}>
+          <section className="builder-modal members-modal" role="dialog" aria-modal="true" aria-labelledby="members-title" onClick={(event) => event.stopPropagation()}>
+            <button className="modal-close" aria-label="Close workspace access" onClick={() => setMembersModal(false)}>
+              <Icon name="close" size={17} />
+            </button>
+            <div className="eyebrow-label">WORKSPACE</div>
+            <h2 id="members-title">Manage access</h2>
+            <p>People need an account before you can add them to this workspace.</p>
+            <div className="member-list">
+              {members.map((member) => (
+                <div className="member-row" key={member.id}>
+                  <span className="member-avatar">{(member.name?.[0] ?? member.email[0]).toUpperCase()}</span>
+                  <span className="member-identity"><b>{member.name}</b><small>{member.email}</small></span>
+                  <span className="member-role">{member.role}{member.pending ? " · invited" : ""}</span>
+                </div>
+              ))}
+            </div>
+            <div className="member-invite">
+              <label className="field-label">Account email<input type="email" value={memberEmail} onChange={(event) => setMemberEmail(event.target.value)} placeholder="teammate@example.com" /></label>
+              <label className="field-label">Permission<select value={memberRole} onChange={(event) => setMemberRole(event.target.value as "editor" | "viewer")}><option value="editor">Editor · can change the page</option><option value="viewer">Viewer · read only</option></select></label>
+              <button className="modal-primary" disabled={!memberEmail.trim()} onClick={() => void saveMember()}>Add or update access</button>
+            </div>
+            {memberMessage && <p className="member-message" role="status">{memberMessage}</p>}
+          </section>
+        </div>
+      )}
+      {generationNotice && !aiModal && (
+        <div className="builder-toast" role="status">
+          <span>{generationNotice}</span>
+          <button aria-label="Dismiss message" onClick={() => setGenerationNotice("")}>×</button>
+        </div>
+      )}
       {modal && (
         <div className="modal-backdrop" onClick={() => setModal(false)}>
           <div className="publish-modal" onClick={(e) => e.stopPropagation()}>

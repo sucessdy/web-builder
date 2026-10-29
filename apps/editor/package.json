@@ -11,6 +11,10 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
+    "@visual-builder/document-schema": "workspace:*",
+    "@visual-builder/editor-engine": "workspace:*",
+    "@visual-builder/renderer-react": "workspace:*",
+    "appwrite": "^29.1.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "tailwindcss": "^4.3.3"

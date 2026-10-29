@@ -15,6 +15,8 @@ export const pageNodeSchema: z.ZodType<PageNode> = z.lazy(() =>
     .object({
       id: z.string().min(1),
       type: componentTypeSchema,
+      name: z.string().optional(),
+      visible: z.boolean().optional(),
       props: z.record(z.string(), z.unknown()),
       styles: styleSchema,
       children: z.array(pageNodeSchema),
@@ -25,6 +27,8 @@ export const pageNodeSchema: z.ZodType<PageNode> = z.lazy(() =>
 export interface PageNode {
   id: string;
   type: "container" | "heading" | "text" | "button" | "image";
+  name?: string;
+  visible?: boolean;
   props: Record<string, unknown>;
   styles: NodeStyles;
   children: PageNode[];

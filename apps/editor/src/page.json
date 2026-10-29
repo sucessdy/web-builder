@@ -1,39 +1,99 @@
 {
-  "components": [
-    {
-      "id": "heading-1",
-      "type": "heading",
-      "props": {
-        "text": "Build Something Amazing"
+  "schemaVersion": 1,
+  "id": "home-page",
+  "metadata": {
+    "title": "North Studio"
+  },
+  "root": {
+    "id": "root",
+    "type": "container",
+    "name": "Home page",
+    "props": {},
+    "styles": {},
+    "children": [
+      {
+        "id": "nav",
+        "type": "container",
+        "name": "Navigation",
+        "visible": true,
+        "props": {},
+        "styles": {},
+        "children": [
+          {
+            "id": "nav__text",
+            "type": "text",
+            "name": "Navigation content",
+            "visible": true,
+            "props": {
+              "text": "NORTH / STUDIO"
+            },
+            "styles": {},
+            "children": []
+          }
+        ]
       },
-      "styles": {
-        "color": "#7c3aed",
-        "fontSize": "36px"
-      }
-    },
-    {
-      "id": "text-1",
-      "type": "text",
-      "props": {
-        "text": "Create your own website with our visual builder."
+      {
+        "id": "eyebrow",
+        "type": "text",
+        "name": "Eyebrow",
+        "visible": true,
+        "props": {
+          "text": "INDEPENDENT DESIGN STUDIO · EST. 2014"
+        },
+        "styles": {},
+        "children": []
       },
-      "styles": {
-        "color": "#6b7280",
-        "fontSize": "18px"
-      }
-    },
-    {
-      "id": "button-1",
-      "type": "button",
-      "props": {
-        "text": "Get Started"
+      {
+        "id": "title",
+        "type": "heading",
+        "name": "Hero heading",
+        "visible": true,
+        "props": {
+          "text": "Make room\nfor wonder.",
+          "level": "h1"
+        },
+        "styles": {
+          "fontSize": "72px"
+        },
+        "children": []
       },
-      "styles": {
-        "backgroundColor": "#7c3aed",
-        "color": "#ffffff",
-        "padding": "12px 24px",
-        "borderRadius": "8px"
+      {
+        "id": "body",
+        "type": "text",
+        "name": "Intro text",
+        "visible": true,
+        "props": {
+          "text": "We build thoughtful digital experiences for people shaping what comes next."
+        },
+        "styles": {},
+        "children": []
+      },
+      {
+        "id": "cta",
+        "type": "button",
+        "name": "Primary button",
+        "visible": true,
+        "props": {
+          "label": "Explore our work",
+          "href": "#",
+          "variant": "primary"
+        },
+        "styles": {},
+        "children": []
+      },
+      {
+        "id": "hero-image",
+        "type": "image",
+        "name": "Hero image",
+        "visible": true,
+        "props": {
+          "src": "https://imgs.search.brave.com/nwXx4ZzsaShWXwwO_a3RiHCxkRrH7fF1y9uE8KtWu-w/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/bWFnbmlmaWMuY29t/L3ByZW1pdW0tcGhv/dG8vYWJzdHJhY3Qt/Zmx1aWQtZ3JhZGll/bnQtc2hhcGVzLWJh/Y2tncm91bmRfNzU1/MDE4LTQ1MjMuanBn/P3NlbXQ9YWlzX2h5/YnJpZCZ3PTc0MCZx/PTgw",
+          "alt": "Abstract shapes in warm light",
+          "objectFit": "cover"
+        },
+        "styles": {},
+        "children": []
       }
-    }
-  ]
+    ]
+  }
 }

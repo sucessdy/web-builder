@@ -1,0 +1,3 @@
+.account-avatar { cursor: pointer; padding: 0; }
+.layer-more.is-disabled { pointer-events: none; opacity: .4; }
+.builder-shell button:disabled { cursor: not-allowed; opacity: .48; }
