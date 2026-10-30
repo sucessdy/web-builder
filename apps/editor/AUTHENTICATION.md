@@ -22,32 +22,31 @@ does not send passwords to a local API or store them in this app.
    emails and team invitations to be delivered. Keep team member names/emails
    visible to members if you want the access dialog to identify invitees.
 
-## Google and Apple sign-in
+## Google and GitHub sign-in
 
 The sign-in and account creation screen has **Continue with Google** and
-**Continue with Apple** buttons. Each provider also needs its own credentials:
+**Continue with GitHub** buttons. Enable and configure each provider separately:
 
 1. In Appwrite Console, open this project, then go to **Auth → Settings → OAuth
-   providers** and select Google or Apple. Enable it and keep the redirect URL
+   providers** and select Google or GitHub. Enable it and copy the redirect URL
    Appwrite shows in that provider's settings.
 2. For Google, create a web OAuth client in Google Cloud Console. Add the exact
    redirect URL shown by Appwrite to the client's **Authorized redirect URIs**,
    then copy its client ID and secret into Appwrite's Google settings.
-3. For Apple, create a **Services ID** and a **Sign in with Apple** key in the
-   Apple Developer portal. Add the redirect URL shown by Appwrite to the
-   Services ID's Return URLs, then enter the Services ID, Team ID, Key ID, and
-   `.p8` key content in Appwrite's Apple settings. Apple sign-in requires an
-   Apple Developer account.
+3. For GitHub, create an OAuth app in GitHub Developer Settings. Set its
+   **Authorization callback URL** to the exact redirect URL shown by Appwrite,
+   then copy its client ID and client secret into Appwrite's GitHub settings.
 4. In the Appwrite project's **Settings → Platforms**, add the app's current
    host (for local use, `localhost`). OAuth success and failure both return to
    that host, so it must be listed as a platform.
 
-Appwrite performs the redirect and creates the user session. On return, the
-editor creates a workspace for a first-time social sign-in. If a provider is
-not enabled or its credentials/redirect URL do not match, the sign-in screen
-shows a setup hint. See Appwrite's [OAuth 2 login guide](https://appwrite.io/docs/products/auth/oauth2),
+The editor uses Appwrite's OAuth token flow: it exchanges the one-time `userId`
+and `secret` returned to the app for an Appwrite session, then opens the builder.
+This avoids relying on the Appwrite session cookie being accepted as a
+third-party cookie by the browser. On first social sign-in, the editor creates
+a workspace. See Appwrite's [OAuth 2 login guide](https://appwrite.io/docs/products/auth/oauth2),
 [Google setup guide](https://appwrite.io/integrations/oauth-google), and
-[Apple setup guide](https://appwrite.io/integrations/oauth-apple).
+[GitHub callback URL guide](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#redirect-urls).
 
 ## How access works
 

@@ -21,10 +21,6 @@ export type GenerationResult = {
   mode: "endpoint" | "local-draft";
 };
 
-/**
- * Uses a configured server-side AI endpoint when available. The local draft is
- * a no-key fallback so the editor remains usable before a provider is connected.
- */
 export async function generatePageFromPrompt(
   prompt: string,
 ): Promise<GenerationResult> {

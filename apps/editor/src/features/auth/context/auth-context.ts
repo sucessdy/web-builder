@@ -38,5 +38,4 @@ export type AuthContextValue = {
   signOut: () => Promise<void>;
 };
 
-export const AuthContext =
-  createContext<AuthContextValue | null>(null);
+export const AuthContext = createContext<AuthContextValue | null>(null);

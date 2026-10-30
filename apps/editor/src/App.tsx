@@ -4,7 +4,7 @@ import {type WorkspaceMember } from "./features/auth/AuthProvider";
 import { generatePageFromPrompt } from "./lib/ai-generator";
 import { buildPageSource } from "./lib/code-export";
 import "./App.css";
-import { useAuth } from "./features/auth/useAuth";
+import { useAuth } from "./features/auth/hooks/useAuth";
 
 type Kind = "section" | "heading" | "text" | "button" | "image";
 type Item = {
