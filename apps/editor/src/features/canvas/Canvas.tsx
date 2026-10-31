@@ -1,21 +1,14 @@
-import { useMemo } from "react";
-import { PageRenderer } from "@visual-builder/renderer-react";
+import {
+  createElement,
+  useMemo,
+  type CSSProperties,
+  type MouseEvent,
+} from "react";
+
 import type {
-  PageDocument,
   PageNode,
 } from "@visual-builder/document-schema";
-
-export type CanvasItem = {
-  id: string;
-  type: "section" | "heading" | "text" | "button" | "image";
-  text: string;
-  visible: boolean;
-  color?: string;
-  fontSize?: number;
-  src?: string;
-  href?: string;
-  variant?: "primary" | "secondary" | "outline";
-};
+import { createCanvasDocument, type CanvasItem } from "./canvas-document";
 
 type CanvasProps = {
   items: CanvasItem[];
@@ -36,120 +29,92 @@ export function Canvas({
   );
 
   return (
-    <PageRenderer
-      document={document}
-      className="rendered-page"
-      selectedNodeId={preview ? undefined : selectedId}
-      onNodeClick={(node) => {
-        if (preview) return;
-
-        // Section text belongs to its parent section.
-        const selectedNodeId = node.id.endsWith("__text")
-          ? node.id.slice(0, -"__text".length)
-          : node.id;
-
-        onSelect(selectedNodeId);
-      }}
-    />
+    <div className="rendered-page">
+      <CanvasNode
+        node={document.root}
+        selectedId={selectedId}
+        preview={preview}
+        onSelect={onSelect}
+      />
+    </div>
   );
 }
 
-export function createCanvasDocument(
-  items: CanvasItem[],
-): PageDocument {
-  return {
-    schemaVersion: 1,
-    id: "home-page",
-    metadata: {
-      title: "Home page",
-    },
-    root: {
-      id: "root",
-      type: "container",
-      props: {},
-      styles: {},
-      children: items
-        .filter((item) => item.visible)
-        .map(createNode),
-    },
+function CanvasNode({
+  node,
+  selectedId,
+  preview,
+  onSelect,
+}: {
+  node: PageNode;
+  selectedId: string;
+  preview: boolean;
+  onSelect: (id: string) => void;
+}) {
+  if (node.visible === false) return null;
+
+  const props = node.props;
+  const children = node.children.map((child) => (
+    <CanvasNode
+      key={child.id}
+      node={child}
+      selectedId={selectedId}
+      preview={preview}
+      onSelect={onSelect}
+    />
+  ));
+  const handleClick = (event: MouseEvent<HTMLElement>) => {
+    if (preview) return;
+    event.stopPropagation();
+    if (node.type === "button") event.preventDefault();
+
+    // Section text belongs to its parent section.
+    const id = node.id.endsWith("__text")
+      ? node.id.slice(0, -"__text".length)
+      : node.id;
+    onSelect(id);
   };
-}
-
-function createNode(item: CanvasItem): PageNode {
-  const styles = {
-    ...(item.color ? { color: item.color } : {}),
-    ...(item.fontSize
-      ? { fontSize: `${item.fontSize}px` }
-      : {}),
+  const common = {
+    "data-node-id": node.id,
+    "data-node-type": node.type,
+    "data-selected": !preview && node.id === selectedId ? "true" : undefined,
+    className: preview ? undefined : "selectable",
+    style: node.styles as CSSProperties,
+    onClick: handleClick,
   };
 
-  switch (item.type) {
-    case "section":
-      return {
-        id: item.id,
-        type: "container",
-        props: {},
-        styles: {},
-        children: [
-          {
-            id: `${item.id}__text`,
-            type: "text",
-            props: {
-              text: item.text,
-            },
-            styles: {},
-            children: [],
-          },
-        ],
-      };
-
-    case "heading":
-      return {
-        id: item.id,
-        type: "heading",
-        props: {
-          text: item.text,
-          level: "h1",
-        },
-        styles,
-        children: [],
-      };
-
-    case "button":
-      return {
-        id: item.id,
-        type: "button",
-        props: {
-          label: item.text,
-          href: item.href ?? "#",
-          variant: item.variant ?? "primary",
-        },
-        styles,
-        children: [],
-      };
-
-    case "image":
-      return {
-        id: item.id,
-        type: "image",
-        props: {
-          src: item.src ?? "https://placehold.co/900x420?text=Add+your+image",
-          alt: item.text,
-          objectFit: "cover",
-        },
-        styles,
-        children: [],
-      };
-
+  switch (node.type) {
+    case "container":
+      return <div {...common}>{children}</div>;
+    case "heading": {
+      const requestedLevel = props.level;
+      const level =
+        typeof requestedLevel === "string" && /^h[1-6]$/.test(requestedLevel)
+          ? requestedLevel
+          : "h1";
+      return createElement(level, common, String(props.text ?? ""), children);
+    }
     case "text":
-      return {
-        id: item.id,
-        type: "text",
-        props: {
-          text: item.text,
-        },
-        styles,
-        children: [],
-      };
+      return <p {...common}>{String(props.text ?? "")}{children}</p>;
+    case "button":
+      return (
+        <a {...common} href={String(props.href ?? "#")}>
+          {String(props.label ?? "")}{children}
+        </a>
+      );
+    case "image":
+      return (
+        <img
+          {...common}
+          src={String(props.src ?? "")}
+          alt={String(props.alt ?? "")}
+          style={
+            {
+              ...node.styles,
+              objectFit: String(props.objectFit ?? "cover"),
+            } as CSSProperties
+          }
+        />
+      );
   }
 }

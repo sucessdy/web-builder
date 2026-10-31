@@ -6,6 +6,7 @@ export const styleSchema = z
     color: z.string().optional(),
     backgroundColor: z.string().optional(),
     fontSize: z.string().optional(),
+    fontFamily: z.string().optional(),
     fontWeight: z.union([z.string(), z.number()]).optional(),
     lineHeight: z.union([z.string(), z.number()]).optional(),
     textAlign: z.enum(["left", "center", "right", "justify"]).optional(),
