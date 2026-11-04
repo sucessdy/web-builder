@@ -75,6 +75,7 @@ function CanvasNode({
     onSelect(id);
   };
   const common = {
+    id: node.id,
     "data-node-id": node.id,
     "data-node-type": node.type,
     "data-selected": !preview && node.id === selectedId ? "true" : undefined,

@@ -3,10 +3,12 @@ import { EditorDialogs } from "./features/editor/EditorDialogs";
 import { EditorSidebar, InspectorPanel } from "./features/editor/EditorPanels";
 import { useEditorController } from "./features/editor/useEditorController";
 import { Icon } from "./features/icons/Icon";
+import { useThemeContext } from "./theme/ThemeProvider";
 import "./App.css";
 
 function App() {
   const editor = useEditorController();
+  const { theme, toggleTheme } = useThemeContext();
   const {
     user,
     authEnabled,
@@ -17,6 +19,9 @@ function App() {
     switchWorkspace,
     signOut,
     items,
+    pages,
+    activePageId,
+    activePageName,
     undoStack,
     redoStack,
     selectedId,
@@ -37,6 +42,11 @@ function App() {
     aiPrompt,
     setAiPrompt,
     generating,
+    chatMessages,
+    chatInput,
+    setChatInput,
+    chatSending,
+    sendChatMessage,
     notice,
     setNotice,
     dismissNotice,
@@ -57,7 +67,8 @@ function App() {
     search,
     setSearch,
     filteredItems,
-    commit,
+    toggleVisibility,
+    loadDemoSite,
     generateFromPrompt,
     update,
     updateStyle,
@@ -66,6 +77,9 @@ function App() {
     exportProject,
     exportCode,
     saveNow,
+    switchPage,
+    addPage,
+    renamePage,
     openMembers,
     saveMember,
     addItem,
@@ -79,6 +93,8 @@ function App() {
   return (
     <div className="builder-shell">
       <EditorHeader
+        pageName={activePageName}
+        theme={theme}
         user={user}
         authEnabled={authEnabled}
         canEdit={canEdit}
@@ -91,6 +107,7 @@ function App() {
         onRedo={redo}
         onShare={() => setPublishOpen(true)}
         onPublish={() => setPublishOpen(true)}
+        onToggleTheme={toggleTheme}
         onSignOut={() => {
           if (authEnabled) void signOut().catch((error: unknown) => {
             setNotice(error instanceof Error ? error.message : "Could not sign out.");
@@ -106,11 +123,18 @@ function App() {
           canEdit={canEdit}
           canManageMembers={canManageMembers}
           filteredItems={filteredItems}
+          pages={pages}
+          activePageId={activePageId}
+          activePageName={activePageName}
           selectedId={selectedId}
           tab={tab}
           search={search}
           iconFor={iconFor}
           onTabChange={setTab}
+          onLoadDemo={loadDemoSite}
+          onCreatePage={addPage}
+          onSwitchPage={switchPage}
+          onRenamePage={renamePage}
           onSearchChange={setSearch}
           onSelect={(id) => {
             selectItem(id);
@@ -119,7 +143,7 @@ function App() {
           onAdd={addItem}
           onAssetSelect={(file) => void addAsset(file)}
           onAiOpen={() => setAiOpen(true)}
-          onToggleVisibility={(id) => commit(items.map((item) => item.id === id ? { ...item, visible: !item.visible } : item))}
+          onToggleVisibility={toggleVisibility}
           onReorder={reorderItems}
           onSwitchWorkspace={(id) => void switchWorkspace(id).catch((error: unknown) => {
             setNotice(error instanceof Error ? error.message : "Could not switch workspace.");
@@ -131,6 +155,7 @@ function App() {
           items={items}
           selectedId={selectedId}
           activeName={active?.name}
+          pageName={activePageName}
           device={device}
           preview={preview}
           zoom={zoom}
@@ -152,6 +177,7 @@ function App() {
           onTabChange={setInspectorTab}
           onUpdate={update}
           onUpdateStyle={updateStyle}
+          onUploadImage={(file) => void addAsset(file)}
           onDelete={removeItem}
         />
       </div>
@@ -160,6 +186,9 @@ function App() {
         aiOpen={aiOpen}
         aiPrompt={aiPrompt}
         generating={generating}
+        chatMessages={chatMessages}
+        chatInput={chatInput}
+        chatSending={chatSending}
         notice={notice}
         exportOpen={exportOpen}
         exportTarget={exportTarget}
@@ -172,6 +201,8 @@ function App() {
         onAiClose={() => setAiOpen(false)}
         onAiPromptChange={setAiPrompt}
         onGenerate={() => void generateFromPrompt()}
+        onChatInputChange={setChatInput}
+        onChatSend={() => void sendChatMessage()}
         onExportClose={() => setExportOpen(false)}
         onExportTargetChange={setExportTarget}
         onExport={exportCode}

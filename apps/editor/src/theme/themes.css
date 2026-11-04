@@ -1,0 +1,59 @@
+/* apps/editor/src/theme/themes.css */
+
+/* Default Light Theme */
+:root {
+  color-scheme: light;
+  --editor-bg: #f4f5f7;
+  --editor-text: #25272c;
+  --panel-bg: #ffffff;
+  --editor-border: #e8e9ec;
+  
+  --text-primary: #17191c;
+  --text-secondary: #52555c;
+  --text-muted: #848891;
+  
+  --brand-color: #7461ee;
+  --brand-hover: #6753e2;
+  
+  --canvas-bg: #faf9f6;
+  --canvas-border: #ebe9e2;
+  
+  --tool-bg: #ffffff;
+  --tool-hover: #f3f3f6;
+  
+  --input-bg: #ffffff;
+  --input-border: #e9eaed;
+  
+  --selection-bg: #f6f4ff;
+  --selection-text: #6154cf;
+  --selection-border: #e9e8f3;
+}
+
+/* Dark Theme Overrides */
+[data-theme="dark"] {
+  color-scheme: dark;
+  --editor-bg: #17181d;
+  --editor-text: #e8eaf0;
+  --panel-bg: #1d1f25;
+  --editor-border: #34363f;
+  
+  --text-primary: #e3e6ed;
+  --text-secondary: #bec3ce;
+  --text-muted: #9298a4;
+  
+  --brand-color: #7562ed;
+  --brand-hover: #6753e2;
+  
+  --canvas-bg: #1a1b21;
+  --canvas-border: #2c2d36;
+  
+  --tool-bg: #22242b;
+  --tool-hover: #2a2b34;
+  
+  --input-bg: #202229;
+  --input-border: #3b3e49;
+  
+  --selection-bg: #2a2b34;
+  --selection-text: #d4c4ff;
+  --selection-border: #41434e;
+}

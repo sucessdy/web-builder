@@ -4,6 +4,8 @@ import type { CanvasItem } from "../canvas/canvas-document";
 import { Icon } from "../icons/Icon";
 
 type HeaderProps = {
+  pageName: string;
+  theme: "light" | "dark";
   user: AuthUser;
   authEnabled: boolean;
   canEdit: boolean;
@@ -17,9 +19,12 @@ type HeaderProps = {
   onShare: () => void;
   onPublish: () => void;
   onSignOut: () => void;
+  onToggleTheme: () => void;
 };
 
 export function EditorHeader({
+  pageName,
+  theme,
   user,
   authEnabled,
   canEdit,
@@ -33,6 +38,7 @@ export function EditorHeader({
   onShare,
   onPublish,
   onSignOut,
+  onToggleTheme,
 }: HeaderProps) {
   return (
     <header className="topbar">
@@ -45,7 +51,7 @@ export function EditorHeader({
       <div className="top-center">
         <span className={`save-dot ${saved ? "is-saved" : ""}`} />
         {saved ? "All changes saved" : "Unsaved changes"}
-        <span className="top-separator" /> <span className="page-path">Home page</span>
+        <span className="top-separator" /> <span className="page-path">{pageName}</span>
       </div>
       <div className="top-actions">
         <button className="icon-button" title="Undo" onClick={onUndo} disabled={!canEdit || !undoCount}>
@@ -53,6 +59,16 @@ export function EditorHeader({
         </button>
         <button className="icon-button" title="Redo" onClick={onRedo} disabled={!canEdit || !redoCount}>
           <Icon name="redo" size={17} />
+        </button>
+        <button
+          className="icon-button theme-toggle"
+          type="button"
+          title={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+          aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+          aria-pressed={theme === "dark"}
+          onClick={onToggleTheme}
+        >
+          <Icon name={theme === "dark" ? "sun" : "moon"} size={17} />
         </button>
         <span className="top-separator" />
         <button className="share-button" onClick={onShare} disabled={!canShare}>Share</button>
@@ -72,6 +88,7 @@ export function EditorHeader({
 }
 
 type CanvasPanelProps = {
+  pageName: string;
   items: CanvasItem[];
   selectedId: string;
   activeName?: string;
@@ -88,6 +105,7 @@ type CanvasPanelProps = {
 };
 
 export function EditorCanvasPanel({
+  pageName,
   items,
   selectedId,
   activeName,
@@ -106,7 +124,7 @@ export function EditorCanvasPanel({
     <main className="editor-main">
       <div className="canvas-toolbar">
         <div className="canvas-breadcrumb">
-          <span>Home page</span><span className="crumb-slash">/</span><span>{activeName}</span>
+          <span>{pageName}</span><span className="crumb-slash">/</span><span>{activeName}</span>
         </div>
         <div className="canvas-tools">
           <button className={`tool-button ${device === "desktop" ? "tool-selected" : ""}`} onClick={() => onDeviceChange("desktop")} title="Desktop">

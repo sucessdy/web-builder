@@ -1,4 +1,5 @@
 import type { WorkspaceMember } from "../auth/context/auth-context";
+import type { ChatMessage } from "../../lib/api-client";
 import type { ExportTarget } from "../../lib/code-export";
 import { Icon } from "../icons/Icon";
 
@@ -6,6 +7,9 @@ type EditorDialogsProps = {
   aiOpen: boolean;
   aiPrompt: string;
   generating: boolean;
+  chatMessages: ChatMessage[];
+  chatInput: string;
+  chatSending: boolean;
   notice: string;
   exportOpen: boolean;
   exportTarget: ExportTarget;
@@ -18,6 +22,8 @@ type EditorDialogsProps = {
   onAiClose: () => void;
   onAiPromptChange: (prompt: string) => void;
   onGenerate: () => void;
+  onChatInputChange: (value: string) => void;
+  onChatSend: () => void;
   onExportClose: () => void;
   onExportTargetChange: (target: ExportTarget) => void;
   onExport: () => void;
@@ -33,6 +39,9 @@ export function EditorDialogs({
   aiOpen,
   aiPrompt,
   generating,
+  chatMessages,
+  chatInput,
+  chatSending,
   notice,
   exportOpen,
   exportTarget,
@@ -45,6 +54,8 @@ export function EditorDialogs({
   onAiClose,
   onAiPromptChange,
   onGenerate,
+  onChatInputChange,
+  onChatSend,
   onExportClose,
   onExportTargetChange,
   onExport,
@@ -65,7 +76,7 @@ export function EditorDialogs({
             </button>
             <div className="modal-mark ai-modal-mark"><Icon name="sparkles" size={20} /></div>
             <h2 id="ai-builder-title">What should we build?</h2>
-            <p>Describe the business, audience, and style. You can edit every layer after the first draft.</p>
+            <p>Generate a page or ask the design assistant for help. You can edit every layer after the first draft.</p>
             <label className="field-label ai-prompt-label">
               Website brief
               <textarea
@@ -79,7 +90,22 @@ export function EditorDialogs({
                 }}
               />
             </label>
-            <div className="ai-connection-note">No AI provider is connected yet. This version creates an editable local draft; connect a server endpoint to use a language model.</div>
+            <div className="ai-connection-note">AI requests run through the NestJS server. Set AI_API_URL, AI_API_KEY, and AI_MODEL in apps/api/.env to enable model responses.</div>
+            <div className="ai-chat-log" aria-live="polite">
+              {chatMessages.length === 0 && <p className="ai-chat-empty">Ask about layout, copy, colors, or how to improve this page.</p>}
+              {chatMessages.map((message, index) => (
+                <div className={`ai-chat-message ${message.role}`} key={`${message.role}-${index}`}>
+                  <b>{message.role === "user" ? "You" : "Design assistant"}</b><span>{message.content}</span>
+                </div>
+              ))}
+              {chatSending && <div className="ai-chat-empty">Assistant is thinking…</div>}
+            </div>
+            <div className="ai-chat-compose">
+              <textarea rows={2} placeholder="Ask the design assistant…" value={chatInput} onChange={(event) => onChatInputChange(event.target.value)} onKeyDown={(event) => {
+                if ((event.metaKey || event.ctrlKey) && event.key === "Enter") onChatSend();
+              }} />
+              <button className="modal-primary" disabled={!chatInput.trim() || chatSending} onClick={onChatSend}>{chatSending ? "Sending…" : "Send"}</button>
+            </div>
             {notice && <p className="ai-error" role="status">{notice}</p>}
             <button className="modal-primary ai-generate-button" disabled={!aiPrompt.trim() || generating} onClick={onGenerate}>
               <Icon name="sparkles" size={15} />

@@ -7,13 +7,17 @@ source.
 ## Start the app
 
 Use Node.js 22.12 or newer and run `pnpm install`, then `pnpm dev` from the
-repository root. The editor runs in Vite and connects to your Appwrite project.
-Set its endpoint and project ID in `apps/editor/.env.local` before signing in.
+repository root. The editor runs in Vite and the NestJS API runs on port 3000.
+Copy `apps/editor/.env.example` to `apps/editor/.env.local` for Appwrite setup,
+and copy `apps/api/.env.example` to `apps/api/.env` to configure the AI provider.
+The API stores page documents in `apps/api/data` and Multer uploads in
+`apps/api/uploads`. AI provider keys stay on the server.
 
 ## How the folders fit together
 
 ```text
 apps/editor                 the screen users work in (canvas, layers, inspector)
+apps/api                    NestJS pages, image upload, and AI endpoints
 Appwrite                    accounts, sessions, workspace teams, invitations
 apps/preview-react          placeholder for viewing a published React site
 apps/preview-vue             placeholder for viewing a published Vue site
@@ -31,11 +35,11 @@ packages/renderer-angular   placeholder for rendering page JSON with Angular
 packages/shared             placeholder for shared utilities
 ```
 
-The current screen stores its editable blocks in browser storage. The Canvas
+The editor stores pages in browser storage and syncs page documents to the API. The Canvas
 converts those blocks into the shared page-document shape, validates it, and
-renders it through `renderer-react`. The AI button currently uses local drafts
-unless a server-side generation endpoint is configured. Code export packages
-the current page as a React or Next.js component.
+renders them. The AI assistant and page generator call the NestJS API, while
+image files upload with Multer and are served from `/uploads`. Code export
+packages the current page as a React or Next.js component.
 
 `apps/editor/AUTHENTICATION.md` explains Appwrite setup and workspace roles.
 

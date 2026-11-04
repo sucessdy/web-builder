@@ -1,98 +1,178 @@
 {
   "schemaVersion": 1,
   "id": "home-page",
-  "metadata": {
-    "title": "North Studio"
-  },
+  "metadata": { "title": "Zephyr AI" },
   "root": {
     "id": "root",
     "type": "container",
-    "name": "Home page",
+    "name": "Zephyr AI website",
     "props": {},
-    "styles": {},
+    "styles": {
+      "minHeight": "100vh",
+      "backgroundColor": "#080a0e",
+      "color": "#f6f8fb",
+      "fontFamily": "Inter"
+    },
     "children": [
       {
-        "id": "nav",
+        "id": "site-nav",
         "type": "container",
         "name": "Navigation",
-        "visible": true,
         "props": {},
-        "styles": {},
+        "styles": {
+          "display": "flex",
+          "alignItems": "center",
+          "justifyContent": "space-between",
+          "flexWrap": "wrap",
+          "gap": "24px",
+          "minHeight": "78px",
+          "padding": "0 6%",
+          "backgroundColor": "#0b0c10",
+          "borderBottom": "1px solid #20232a"
+        },
         "children": [
           {
-            "id": "nav__text",
-            "type": "text",
-            "name": "Navigation content",
-            "visible": true,
-            "props": {
-              "text": "NORTH / STUDIO"
-            },
-            "styles": {},
+            "id": "brand",
+            "type": "heading",
+            "name": "Brand",
+            "props": { "text": "Zephyr.AI", "level": "h2" },
+            "styles": { "margin": "0", "fontFamily": "Manrope", "fontSize": "28px", "fontWeight": 800, "letterSpacing": "-1px", "color": "#f5f7fb" },
             "children": []
+          },
+          {
+            "id": "nav-links",
+            "type": "container",
+            "name": "Navigation links",
+            "props": {},
+            "styles": { "display": "flex", "alignItems": "center", "justifyContent": "center", "gap": "10px", "flexWrap": "wrap" },
+            "children": [
+              { "id": "nav-home", "type": "button", "name": "Home link", "props": { "label": "Home", "href": "#root", "variant": "outline" }, "styles": { "padding": "10px 17px", "borderRadius": "24px", "border": "1px solid #252a34", "backgroundColor": "#131722", "color": "#f5f7fb", "fontSize": "13px", "fontWeight": 600, "textDecoration": "none" }, "children": [] },
+              { "id": "nav-features", "type": "button", "name": "Features link", "props": { "label": "Features", "href": "#features-section", "variant": "outline" }, "styles": { "padding": "10px 17px", "borderRadius": "24px", "border": "1px solid #252a34", "backgroundColor": "#131722", "color": "#f5f7fb", "fontSize": "13px", "fontWeight": 600, "textDecoration": "none" }, "children": [] },
+              { "id": "nav-services", "type": "button", "name": "Services link", "props": { "label": "Services", "href": "#services-section", "variant": "outline" }, "styles": { "padding": "10px 17px", "borderRadius": "24px", "border": "1px solid #252a34", "backgroundColor": "#131722", "color": "#f5f7fb", "fontSize": "13px", "fontWeight": 600, "textDecoration": "none" }, "children": [] },
+              { "id": "nav-contact", "type": "button", "name": "Contact link", "props": { "label": "Contact", "href": "#contact-section", "variant": "outline" }, "styles": { "padding": "10px 17px", "borderRadius": "24px", "border": "1px solid #252a34", "backgroundColor": "#131722", "color": "#f5f7fb", "fontSize": "13px", "fontWeight": 600, "textDecoration": "none" }, "children": [] }
+            ]
+          },
+          { "id": "nav-cta", "type": "button", "name": "Navigation call to action", "props": { "label": "Get started", "href": "#contact-section", "variant": "primary" }, "styles": { "padding": "12px 22px", "borderRadius": "24px", "backgroundColor": "#b51df2", "color": "#ffffff", "fontSize": "12px", "fontWeight": 700, "textDecoration": "none", "textAlign": "center" }, "children": [] }
+        ]
+      },
+      {
+        "id": "hero-section",
+        "type": "container",
+        "name": "Hero section",
+        "props": {},
+        "styles": {
+          "display": "grid",
+          "gridTemplateColumns": "repeat(auto-fit, minmax(320px, 1fr))",
+          "alignItems": "center",
+          "gap": "48px",
+          "minHeight": "590px",
+          "padding": "76px 8%",
+          "backgroundColor": "#080a0e"
+        },
+        "children": [
+          {
+            "id": "hero-copy",
+            "type": "container",
+            "name": "Hero copy",
+            "props": {},
+            "styles": { "display": "flex", "flexDirection": "column", "alignItems": "flex-start", "gap": "18px", "maxWidth": "560px" },
+            "children": [
+              { "id": "hero-eyebrow", "type": "text", "name": "Eyebrow", "props": { "text": "INTELLIGENCE THAT MOVES YOU FORWARD" }, "styles": { "margin": "0", "color": "#80d9f4", "fontSize": "11px", "fontWeight": 700, "letterSpacing": "2px" }, "children": [] },
+              { "id": "hero-title", "type": "heading", "name": "Hero heading", "props": { "text": "Empower your business with", "level": "h1" }, "styles": { "margin": "0", "fontFamily": "Manrope", "fontSize": "58px", "fontWeight": 750, "lineHeight": 1.03, "letterSpacing": "-3px", "color": "#f6f8fb" }, "children": [] },
+              { "id": "hero-accent", "type": "heading", "name": "Hero accent", "props": { "text": "smarter AI.", "level": "h1" }, "styles": { "margin": "-10px 0 0", "fontFamily": "Manrope", "fontSize": "58px", "fontWeight": 750, "lineHeight": 1.03, "letterSpacing": "-3px", "color": "#42c9f2" }, "children": [] },
+              { "id": "hero-description", "type": "text", "name": "Hero description", "props": { "text": "Unlock growth and efficiency with tailored AI solutions. We use intelligent automation and data-driven strategies to help you innovate and scale in the modern digital landscape." }, "styles": { "margin": "4px 0 0", "maxWidth": "490px", "color": "#b8c0cb", "fontSize": "16px", "lineHeight": 1.75 }, "children": [] },
+              { "id": "hero-button", "type": "button", "name": "Hero call to action", "props": { "label": "Begin today  ↗", "href": "#contact-section", "variant": "primary" }, "styles": { "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "margin": "10px 0 0", "padding": "15px 25px", "borderRadius": "28px", "backgroundColor": "#b51df2", "color": "#ffffff", "fontSize": "13px", "fontWeight": 700, "textDecoration": "none" }, "children": [] }
+            ]
+          },
+          {
+            "id": "hero-art-panel",
+            "type": "container",
+            "name": "Hero artwork panel",
+            "props": {},
+            "styles": { "display": "flex", "alignItems": "center", "justifyContent": "center", "minHeight": "380px", "padding": "30px", "backgroundColor": "#0c111a", "border": "1px solid #1c2835", "borderRadius": "28px", "boxShadow": "0 24px 72px #00000055" },
+            "children": [
+              { "id": "hero-image", "type": "image", "name": "Hero artwork", "props": { "src": "/assets/hero.png", "alt": "Layered purple and black abstract AI artwork", "objectFit": "contain" }, "styles": { "display": "block", "width": "100%", "maxWidth": "420px", "height": "350px" }, "children": [] }
+            ]
           }
         ]
       },
       {
-        "id": "eyebrow",
-        "type": "text",
-        "name": "Eyebrow",
-        "visible": true,
-        "props": {
-          "text": "INDEPENDENT DESIGN STUDIO · EST. 2014"
-        },
-        "styles": {},
-        "children": []
+        "id": "features-section",
+        "type": "container",
+        "name": "Features section",
+        "props": {},
+        "styles": { "display": "flex", "flexDirection": "column", "gap": "32px", "padding": "76px 8%", "backgroundColor": "#0b0d11" },
+        "children": [
+          { "id": "features-title", "type": "heading", "name": "Features heading", "props": { "text": "Everything you need to move faster", "level": "h2" }, "styles": { "margin": "0", "fontFamily": "Manrope", "fontSize": "38px", "fontWeight": 700, "letterSpacing": "-1.5px", "color": "#f4f7fa", "textAlign": "center" }, "children": [] },
+          { "id": "features-intro", "type": "text", "name": "Features introduction", "props": { "text": "One connected platform for insight, automation, and meaningful growth." }, "styles": { "margin": "-20px 0 0", "color": "#9ea8b5", "fontSize": "15px", "textAlign": "center" }, "children": [] },
+          {
+            "id": "feature-grid",
+            "type": "container",
+            "name": "Feature cards",
+            "props": {},
+            "styles": { "display": "grid", "gridTemplateColumns": "repeat(auto-fit, minmax(220px, 1fr))", "gap": "18px", "margin": "12px 0 0" },
+            "children": [
+              { "id": "feature-insights", "type": "container", "name": "Insights card", "props": {}, "styles": { "display": "flex", "flexDirection": "column", "alignItems": "flex-start", "gap": "15px", "minHeight": "225px", "padding": "28px", "backgroundColor": "#12161c", "border": "1px solid #252b34", "borderRadius": "16px" }, "children": [
+                { "id": "insights-icon", "type": "text", "name": "Insights icon", "props": { "text": "↗" }, "styles": { "margin": "0", "color": "#42c9f2", "fontSize": "28px", "fontWeight": 700 }, "children": [] },
+                { "id": "insights-title", "type": "heading", "name": "Insights title", "props": { "text": "Smarter insights", "level": "h3" }, "styles": { "margin": "0", "color": "#f3f5f8", "fontFamily": "Manrope", "fontSize": "21px", "fontWeight": 700 }, "children": [] },
+                { "id": "insights-body", "type": "text", "name": "Insights description", "props": { "text": "Make faster, data-driven decisions powered by real-time analysis and predictive models." }, "styles": { "margin": "0", "color": "#a8b0bb", "fontSize": "14px", "lineHeight": 1.7 }, "children": [] }
+              ] },
+              { "id": "feature-integrations", "type": "container", "name": "Solutions card", "props": {}, "styles": { "display": "flex", "flexDirection": "column", "alignItems": "flex-start", "gap": "15px", "minHeight": "225px", "padding": "28px", "backgroundColor": "#12161c", "border": "1px solid #252b34", "borderRadius": "16px" }, "children": [
+                { "id": "solutions-icon", "type": "text", "name": "Solutions icon", "props": { "text": "▣" }, "styles": { "margin": "0", "color": "#42c9f2", "fontSize": "28px", "fontWeight": 700 }, "children": [] },
+                { "id": "solutions-title", "type": "heading", "name": "Solutions title", "props": { "text": "Integrated solutions", "level": "h3" }, "styles": { "margin": "0", "color": "#f3f5f8", "fontFamily": "Manrope", "fontSize": "21px", "fontWeight": 700 }, "children": [] },
+                { "id": "solutions-body", "type": "text", "name": "Solutions description", "props": { "text": "Connect your tools and workflows in one calm, reliable workspace built to scale." }, "styles": { "margin": "0", "color": "#a8b0bb", "fontSize": "14px", "lineHeight": 1.7 }, "children": [] }
+              ] },
+              { "id": "feature-automation", "type": "container", "name": "Automation card", "props": {}, "styles": { "display": "flex", "flexDirection": "column", "alignItems": "flex-start", "gap": "15px", "minHeight": "225px", "padding": "28px", "backgroundColor": "#12161c", "border": "1px solid #252b34", "borderRadius": "16px" }, "children": [
+                { "id": "automation-icon", "type": "text", "name": "Automation icon", "props": { "text": "✳" }, "styles": { "margin": "0", "color": "#42c9f2", "fontSize": "28px", "fontWeight": 700 }, "children": [] },
+                { "id": "automation-title", "type": "heading", "name": "Automation title", "props": { "text": "End-to-end automation", "level": "h3" }, "styles": { "margin": "0", "color": "#f3f5f8", "fontFamily": "Manrope", "fontSize": "21px", "fontWeight": 700 }, "children": [] },
+                { "id": "automation-body", "type": "text", "name": "Automation description", "props": { "text": "Eliminate bottlenecks with intelligent workflows that streamline everyday operations." }, "styles": { "margin": "0", "color": "#a8b0bb", "fontSize": "14px", "lineHeight": 1.7 }, "children": [] }
+              ] }
+            ]
+          }
+        ]
       },
       {
-        "id": "title",
-        "type": "heading",
-        "name": "Hero heading",
-        "visible": true,
-        "props": {
-          "text": "Make room\nfor wonder.",
-          "level": "h1"
-        },
-        "styles": {
-          "fontSize": "72px"
-        },
-        "children": []
+        "id": "services-section",
+        "type": "container",
+        "name": "Services section",
+        "props": {},
+        "styles": { "display": "grid", "gridTemplateColumns": "repeat(auto-fit, minmax(320px, 1fr))", "alignItems": "center", "gap": "56px", "padding": "82px 8%", "backgroundColor": "#090b0f" },
+        "children": [
+          { "id": "services-copy", "type": "container", "name": "Services copy", "props": {}, "styles": { "display": "flex", "flexDirection": "column", "alignItems": "flex-start", "gap": "18px" }, "children": [
+            { "id": "services-eyebrow", "type": "text", "name": "Services eyebrow", "props": { "text": "BUILT FOR YOUR NEXT CHAPTER" }, "styles": { "margin": "0", "color": "#80d9f4", "fontSize": "11px", "fontWeight": 700, "letterSpacing": "2px" }, "children": [] },
+            { "id": "services-title", "type": "heading", "name": "Services heading", "props": { "text": "AI that fits the way your team works", "level": "h2" }, "styles": { "margin": "0", "fontFamily": "Manrope", "fontSize": "40px", "fontWeight": 700, "lineHeight": 1.1, "letterSpacing": "-1.5px", "color": "#f5f7fa" }, "children": [] },
+            { "id": "services-body", "type": "text", "name": "Services description", "props": { "text": "Start with a focused use case, bring your existing tools, and expand when you are ready. Your team stays in control at every step." }, "styles": { "margin": "0", "color": "#a8b0bb", "fontSize": "15px", "lineHeight": 1.8 }, "children": [] },
+            { "id": "services-link", "type": "button", "name": "Explore services link", "props": { "label": "Explore our services  →", "href": "#contact-section", "variant": "outline" }, "styles": { "margin": "8px 0 0", "padding": "12px 0", "color": "#42c9f2", "backgroundColor": "transparent", "fontSize": "14px", "fontWeight": 700, "textDecoration": "none" }, "children": [] }
+          ] },
+          { "id": "services-panel", "type": "container", "name": "Services panel", "props": {}, "styles": { "display": "flex", "flexDirection": "column", "gap": "14px", "padding": "30px", "backgroundColor": "#11151c", "border": "1px solid #252b34", "borderRadius": "18px" }, "children": [
+            { "id": "service-1", "type": "text", "name": "Service item one", "props": { "text": "01   Strategy and AI readiness" }, "styles": { "margin": "0", "padding": "15px 0", "borderBottom": "1px solid #252b34", "color": "#eaf0f7", "fontSize": "16px", "fontWeight": 600 }, "children": [] },
+            { "id": "service-2", "type": "text", "name": "Service item two", "props": { "text": "02   Workflow automation" }, "styles": { "margin": "0", "padding": "15px 0", "borderBottom": "1px solid #252b34", "color": "#eaf0f7", "fontSize": "16px", "fontWeight": 600 }, "children": [] },
+            { "id": "service-3", "type": "text", "name": "Service item three", "props": { "text": "03   Custom AI experiences" }, "styles": { "margin": "0", "padding": "15px 0", "color": "#eaf0f7", "fontSize": "16px", "fontWeight": 600 }, "children": [] }
+          ] }
+        ]
       },
       {
-        "id": "body",
-        "type": "text",
-        "name": "Intro text",
-        "visible": true,
-        "props": {
-          "text": "We build thoughtful digital experiences for people shaping what comes next."
-        },
-        "styles": {},
-        "children": []
+        "id": "contact-section",
+        "type": "container",
+        "name": "Contact section",
+        "props": {},
+        "styles": { "display": "flex", "flexDirection": "column", "alignItems": "center", "justifyContent": "center", "gap": "18px", "padding": "72px 8%", "backgroundColor": "#10131a", "textAlign": "center" },
+        "children": [
+          { "id": "contact-title", "type": "heading", "name": "Contact heading", "props": { "text": "Ready to build what’s next?", "level": "h2" }, "styles": { "margin": "0", "fontFamily": "Manrope", "fontSize": "40px", "fontWeight": 700, "letterSpacing": "-1.5px", "color": "#f5f7fa" }, "children": [] },
+          { "id": "contact-description", "type": "text", "name": "Contact description", "props": { "text": "Let’s find the right first step for your team." }, "styles": { "margin": "0", "color": "#a8b0bb", "fontSize": "15px" }, "children": [] },
+          { "id": "contact-button", "type": "button", "name": "Contact call to action", "props": { "label": "Talk to our team  ↗", "href": "mailto:hello@zephyr.ai", "variant": "primary" }, "styles": { "margin": "8px 0 0", "padding": "15px 25px", "borderRadius": "28px", "backgroundColor": "#b51df2", "color": "#ffffff", "fontSize": "13px", "fontWeight": 700, "textDecoration": "none" }, "children": [] }
+        ]
       },
       {
-        "id": "cta",
-        "type": "button",
-        "name": "Primary button",
-        "visible": true,
-        "props": {
-          "label": "Explore our work",
-          "href": "#",
-          "variant": "primary"
-        },
-        "styles": {},
-        "children": []
-      },
-      {
-        "id": "hero-image",
-        "type": "image",
-        "name": "Hero image",
-        "visible": true,
-        "props": {
-          "src": "https://imgs.search.brave.com/nwXx4ZzsaShWXwwO_a3RiHCxkRrH7fF1y9uE8KtWu-w/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/bWFnbmlmaWMuY29t/L3ByZW1pdW0tcGhv/dG8vYWJzdHJhY3Qt/Zmx1aWQtZ3JhZGll/bnQtc2hhcGVzLWJh/Y2tncm91bmRfNzU1/MDE4LTQ1MjMuanBn/P3NlbXQ9YWlzX2h5/YnJpZCZ3PTc0MCZx/PTgw",
-          "alt": "Abstract shapes in warm light",
-          "objectFit": "cover"
-        },
-        "styles": {},
-        "children": []
+        "id": "site-footer",
+        "type": "container",
+        "name": "Footer",
+        "props": {},
+        "styles": { "display": "flex", "alignItems": "center", "justifyContent": "space-between", "gap": "16px", "padding": "25px 6%", "backgroundColor": "#080a0e", "borderTop": "1px solid #20232a" },
+        "children": [
+          { "id": "footer-brand", "type": "text", "name": "Footer brand", "props": { "text": "Zephyr.AI" }, "styles": { "margin": "0", "color": "#f4f6f9", "fontSize": "14px", "fontWeight": 700 }, "children": [] },
+          { "id": "footer-copy", "type": "text", "name": "Copyright", "props": { "text": "© 2026 Zephyr AI. Built for people moving forward." }, "styles": { "margin": "0", "color": "#7f8995", "fontSize": "12px", "textAlign": "right" }, "children": [] }
+        ]
       }
     ]
   }

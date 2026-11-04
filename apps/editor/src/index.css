@@ -1,7 +1,9 @@
 @import "tailwindcss";
 @source "./features/auth/auth.config.json";
+@import "./theme/themes.css";   
+
 * { box-sizing: border-box; }
 html, body { margin: 0; min-width: 320px; min-height: 100%; }
-body { min-height: 100vh; }
+body { min-height: 100vh; background: var(--editor-bg); color: var(--editor-text); }
 button { -webkit-tap-highlight-color: transparent; }
 ::selection { background: #dcd6ff; color: #312771; }

@@ -25,6 +25,7 @@ type PageNode = {
 const page: { root: PageNode } = ${serializedPage};
 const stringValue = (value: unknown) => typeof value === "string" ? value : "";
 const pageStyles = \`
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Lora:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Merriweather:wght@400;700;900&family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@400;500;700;900&family=Source+Sans+3:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
   .generated-site { min-height: 100vh; color: #20231f; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
   .generated-site *, .generated-site *::before, .generated-site *::after { box-sizing: border-box; }
   .generated-site img { display: block; max-width: 100%; height: auto; }
@@ -37,7 +38,7 @@ function PageNodeView({ node }: { node: PageNode }): ReactNode {
   if (node.visible === false) return null;
   const props = node.props ?? {};
   const children = node.children?.map((child) => <PageNodeView key={child.id} node={child} />);
-  const common = { style: node.styles, "data-node-id": node.id, "data-node-type": node.type };
+  const common = { id: node.id, style: node.styles, "data-node-id": node.id, "data-node-type": node.type };
 
   switch (node.type) {
     case "container":

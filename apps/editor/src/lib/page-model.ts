@@ -16,18 +16,22 @@ export type EditorLayer = {
   visible: boolean;
   color?: string;
   fontSize?: number;
+  level?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   src?: string;
   href?: string;
   variant?: "primary" | "secondary" | "outline";
   styles?: NodeStyles;
+  children?: EditorLayer[];
 };
 
 export const pageTemplate = pageDocumentSchema.parse(pageTemplateJson);
 
 export function pageToLayers(page: PageDocument): EditorLayer[] {
-  return page.root.children.map((node) => {
-    const contentNode = node.type === "container" ? node.children[0] : node;
-    const props = contentNode?.props ?? node.props;
+  return page.root.children.map(nodeToLayer);
+}
+
+function nodeToLayer(node: PageNode): EditorLayer {
+    const props = node.type === "container" ? node.children.find((child) => child.type === "text")?.props ?? {} : node.props;
     const fontSize = Number.parseFloat(node.styles.fontSize ?? "");
     const shared = {
       id: node.id,
@@ -36,13 +40,21 @@ export function pageToLayers(page: PageDocument): EditorLayer[] {
       styles: node.styles,
       color: node.styles.color,
       fontSize: Number.isNaN(fontSize) ? undefined : fontSize,
+      children: node.children.map(nodeToLayer),
     };
 
     switch (node.type) {
       case "container":
         return { ...shared, type: "section", text: String(props.text ?? "") };
-      case "heading":
-        return { ...shared, type: "heading", text: String(props.text ?? "") };
+      case "heading": {
+        const level = props.level;
+        return {
+          ...shared,
+          type: "heading",
+          text: String(props.text ?? ""),
+          level: typeof level === "string" && /^h[1-6]$/.test(level) ? level as EditorLayer["level"] : "h1",
+        };
+      }
       case "button": {
         const variant = props.variant;
         return {
@@ -63,7 +75,6 @@ export function pageToLayers(page: PageDocument): EditorLayer[] {
       case "text":
         return { ...shared, type: "text", text: String(props.text ?? "") };
     }
-  });
 }
 
 export function layerToPageNode(layer: EditorLayer): PageNode {
@@ -80,8 +91,8 @@ export function layerToPageNode(layer: EditorLayer): PageNode {
         ...common,
         type: "container",
         props: {},
-        styles: layer.styles ?? {},
-        children: [{
+        styles,
+        children: layer.children?.length ? layer.children.map(layerToPageNode) : [{
           id: `${layer.id}__text`,
           type: "text",
           name: `${layer.name} content`,
@@ -91,14 +102,14 @@ export function layerToPageNode(layer: EditorLayer): PageNode {
         }],
       };
     case "heading":
-      return { ...common, type: "heading", props: { text: layer.text, level: "h1" }, styles, children: [] };
+      return { ...common, type: "heading", props: { text: layer.text, level: layer.level ?? "h1" }, styles, children: layer.children?.map(layerToPageNode) ?? [] };
     case "button":
       return {
         ...common,
         type: "button",
         props: { label: layer.text, href: layer.href ?? "#", variant: layer.variant ?? "primary" },
         styles,
-        children: [],
+        children: layer.children?.map(layerToPageNode) ?? [],
       };
     case "image":
       return {
@@ -110,11 +121,44 @@ export function layerToPageNode(layer: EditorLayer): PageNode {
           objectFit: "cover",
         },
         styles,
-        children: [],
+        children: layer.children?.map(layerToPageNode) ?? [],
       };
     case "text":
-      return { ...common, type: "text", props: { text: layer.text }, styles, children: [] };
+      return { ...common, type: "text", props: { text: layer.text }, styles, children: layer.children?.map(layerToPageNode) ?? [] };
   }
+}
+
+export function findLayer(layers: EditorLayer[], id: string): EditorLayer | undefined {
+  for (const layer of layers) {
+    if (layer.id === id) return layer;
+    const found = layer.children && findLayer(layer.children, id);
+    if (found) return found;
+  }
+  return undefined;
+}
+
+export function updateLayerTree(
+  layers: EditorLayer[],
+  id: string,
+  updater: (layer: EditorLayer) => EditorLayer,
+): EditorLayer[] {
+  return layers.map((layer) => {
+    if (layer.id === id) return updater(layer);
+    return layer.children ? { ...layer, children: updateLayerTree(layer.children, id, updater) } : layer;
+  });
+}
+
+export function removeLayerTree(layers: EditorLayer[], id: string): EditorLayer[] {
+  return layers
+    .filter((layer) => layer.id !== id)
+    .map((layer) => layer.children ? { ...layer, children: removeLayerTree(layer.children, id) } : layer);
+}
+
+export function flattenLayers(layers: EditorLayer[], depth = 0): Array<{ item: EditorLayer; depth: number }> {
+  return layers.flatMap((item) => [
+    { item, depth },
+    ...(item.children ? flattenLayers(item.children, depth + 1) : []),
+  ]);
 }
 
 export function layersToPage(layers: EditorLayer[]): PageDocument {
