@@ -80,9 +80,13 @@ function App() {
     switchPage,
     addPage,
     renamePage,
+    duplicatePage,
+    deletePage,
     openMembers,
     saveMember,
     addItem,
+    addInsertPreset,
+    addLayout,
     addAsset,
     removeItem,
     reorderItems,
@@ -135,12 +139,16 @@ function App() {
           onCreatePage={addPage}
           onSwitchPage={switchPage}
           onRenamePage={renamePage}
+          onDuplicatePage={duplicatePage}
+          onDeletePage={deletePage}
           onSearchChange={setSearch}
           onSelect={(id) => {
             selectItem(id);
             setInspectorTab("style");
           }}
           onAdd={addItem}
+          onAddInsertPreset={addInsertPreset}
+          onAddLayout={addLayout}
           onAssetSelect={(file) => void addAsset(file)}
           onAiOpen={() => setAiOpen(true)}
           onToggleVisibility={toggleVisibility}

@@ -92,7 +92,7 @@ export function layerToPageNode(layer: EditorLayer): PageNode {
         type: "container",
         props: {},
         styles,
-        children: layer.children?.length ? layer.children.map(layerToPageNode) : [{
+        children: layer.children !== undefined ? layer.children.map(layerToPageNode) : [{
           id: `${layer.id}__text`,
           type: "text",
           name: `${layer.name} content`,
@@ -133,6 +133,15 @@ export function findLayer(layers: EditorLayer[], id: string): EditorLayer | unde
     if (layer.id === id) return layer;
     const found = layer.children && findLayer(layer.children, id);
     if (found) return found;
+  }
+  return undefined;
+}
+
+export function findParentLayer(layers: EditorLayer[], id: string): EditorLayer | undefined {
+  for (const layer of layers) {
+    if (layer.children?.some((child) => child.id === id)) return layer;
+    const parent = layer.children && findParentLayer(layer.children, id);
+    if (parent) return parent;
   }
   return undefined;
 }

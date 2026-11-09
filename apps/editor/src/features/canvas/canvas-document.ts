@@ -62,7 +62,7 @@ function createNode(item: CanvasItem): PageNode {
         type: "container",
         props: {},
         styles,
-        children: item.children?.length ? item.children.map(createNode) : [
+        children: item.children !== undefined ? item.children.map(createNode) : [
           {
             id: `${item.id}__text`,
             type: "text",

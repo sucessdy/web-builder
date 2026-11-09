@@ -19,6 +19,14 @@ export async function saveRemotePage(workspaceId: string, page: { id: string; na
   if (!response.ok) throw new Error(`Page service returned ${response.status}.`);
 }
 
+export async function deleteRemotePage(workspaceId: string, pageId: string): Promise<void> {
+  const response = await fetch(`${apiRoot}/pages/${encodeURIComponent(pageId)}`, {
+    method: "DELETE",
+    headers: { "X-Workspace-Id": workspaceId },
+  });
+  if (!response.ok && response.status !== 404) throw new Error(`Page service returned ${response.status}.`);
+}
+
 export async function uploadImage(file: File): Promise<string> {
   const data = new FormData();
   data.append("file", file);

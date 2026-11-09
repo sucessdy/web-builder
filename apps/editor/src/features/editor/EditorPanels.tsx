@@ -1,9 +1,10 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import type { AuthUser } from "../auth/context/auth-context";
 import type { NodeStyles } from "@visual-builder/document-schema";
 import type { EditorLayer, LayerType } from "../../lib/page-model";
 import { Icon, type IconName } from "../icons/Icon";
-import { blockOptions } from "./layer-config";
+import { InsertPanel } from "./InsertPanel";
+import type { LayoutOption } from "./layer-config";
 
 type IconComponent = typeof Icon;
 type LayerRow = { item: EditorLayer; depth: number };
@@ -27,9 +28,13 @@ type SidebarProps = {
   onCreatePage: () => void;
   onSwitchPage: (id: string) => void;
   onRenamePage: (id: string, name: string) => void;
+  onDuplicatePage: (id: string) => void;
+  onDeletePage: (id: string) => void;
   onSearchChange: (search: string) => void;
   onSelect: (id: string) => void;
   onAdd: (type: LayerType) => void;
+  onAddInsertPreset: (preset: "text-link" | "blockquote") => void;
+  onAddLayout: (layout: LayoutOption["id"]) => void;
   onAssetSelect: (file: File) => void;
   onAiOpen: () => void;
   onToggleVisibility: (id: string) => void;
@@ -57,9 +62,13 @@ export function EditorSidebar({
   onCreatePage,
   onSwitchPage,
   onRenamePage,
+  onDuplicatePage,
+  onDeletePage,
   onSearchChange,
   onSelect,
   onAdd,
+  onAddInsertPreset,
+  onAddLayout,
   onAssetSelect,
   onAiOpen,
   onToggleVisibility,
@@ -68,6 +77,7 @@ export function EditorSidebar({
   onOpenMembers,
 }: SidebarProps) {
   const assetInput = useRef<HTMLInputElement>(null);
+  const [openPageMenu, setOpenPageMenu] = useState<string | null>(null);
 
   return (
     <>
@@ -75,7 +85,7 @@ export function EditorSidebar({
         <button className="rail-button active" title="Builder">
           <Icon name="grid" />
         </button>
-        <button className="rail-button" title="Components" onClick={() => onTabChange("blocks")}>
+        <button className="rail-button" title="Insert" onClick={() => onTabChange("blocks")}>
           <Icon name="plus" />
         </button>
         <button className="rail-button ai-rail-button" title="Generate a website with AI" disabled={!canEdit} onClick={onAiOpen}>
@@ -102,24 +112,43 @@ export function EditorSidebar({
         <div className="panel-title-row">
           <div>
             <div className="eyebrow-label">WEBSITE</div>
-            <h1>{tab === "blocks" ? "Blocks" : <>Pages <span className="page-count">{pages.length}</span></>}</h1>
+            <h1>{tab === "blocks" ? "Insert" : <>Pages <span className="page-count">{pages.length}</span></>}</h1>
           </div>
           {tab === "layers" && <button className="small-icon-button" title="Add page" disabled={!canEdit} onClick={onCreatePage}><Icon name="plus" size={17} /></button>}
         </div>
         {tab === "layers" && <div className="page-list">
           {pages.map((page) => (
-            <button
-              key={page.id}
-              className={`page-row ${page.id === activePageId ? "active" : ""}`}
-              onClick={() => onSwitchPage(page.id)}
-              onDoubleClick={() => {
-                const name = window.prompt("Rename page", page.name);
-                if (name) onRenamePage(page.id, name);
-              }}
-              title="Click to open · double-click to rename"
-            >
-              <span className="page-glyph">{page.id === "home-page" ? "⌂" : "▤"}</span><span>{page.name}</span>
-            </button>
+            <div className="page-entry" key={page.id}>
+              <button
+                className={`page-row ${page.id === activePageId ? "active" : ""}`}
+                onClick={() => { setOpenPageMenu(null); onSwitchPage(page.id); }}
+                title={page.name}
+              >
+                <span className="page-glyph">{page.id === "home-page" ? "⌂" : "▤"}</span><span className="page-row-name">{page.name}</span>
+              </button>
+              <button
+                className="page-menu-trigger"
+                disabled={!canEdit}
+                aria-label={`Actions for ${page.name}`}
+                aria-haspopup="menu"
+                aria-expanded={openPageMenu === page.id}
+                onClick={() => setOpenPageMenu((current) => current === page.id ? null : page.id)}
+              >
+                <Icon name="more" size={16} />
+              </button>
+              {openPageMenu === page.id && <div className="page-actions-menu" role="menu">
+                <button role="menuitem" onClick={() => {
+                  const name = window.prompt("Rename page", page.name);
+                  if (name) onRenamePage(page.id, name);
+                  setOpenPageMenu(null);
+                }}>Rename</button>
+                <button role="menuitem" onClick={() => { onDuplicatePage(page.id); setOpenPageMenu(null); }}>Duplicate</button>
+                <button role="menuitem" className="page-delete-action" disabled={pages.length <= 1} title={pages.length <= 1 ? "Keep at least one page" : "Delete page"} onClick={() => {
+                  if (window.confirm(`Delete “${page.name}”? This cannot be undone.`)) onDeletePage(page.id);
+                  setOpenPageMenu(null);
+                }}>Delete</button>
+              </div>}
+            </div>
           ))}
         </div>}
         <div className="panel-tabs">
@@ -176,22 +205,16 @@ export function EditorSidebar({
             <div className="layer-tip"><span className="tip-icon">✦</span><span><b>Tip</b> · Drag layers to reorder your page.</span></div>
           </>
         ) : (
-          <div className="blocks-content">
-            <div className="block-intro">
-              Add to your page
-              <span>Choose a reusable component to add it to the current page.</span>
-              <button className="demo-site-button" disabled={!canEdit} onClick={onLoadDemo}>Load Zephyr AI demo</button>
-            </div>
-            <div className="block-grid">
-              {blockOptions.map(({ type, label }) => (
-                <button className="block-card" key={type} disabled={!canEdit} onClick={() => onAdd(type)}>
-                  <span className={`block-icon ${type}`}><Icon name={iconFor(type)} size={19} /></span>
-                  <span>{label}</span><Icon name="plus" size={13} />
-                </button>
-              ))}
-            </div>
-            <div className="block-note">More blocks and templates coming soon.</div>
-          </div>
+          <InsertPanel
+            canEdit={canEdit}
+            search={search}
+            iconFor={iconFor}
+            onSearchChange={onSearchChange}
+            onLoadDemo={onLoadDemo}
+            onAdd={onAdd}
+            onAddInsertPreset={onAddInsertPreset}
+            onAddLayout={onAddLayout}
+          />
         )}
         <div className="left-panel-bottom">
           <div className="workspace-user">

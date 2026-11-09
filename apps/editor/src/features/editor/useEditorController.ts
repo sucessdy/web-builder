@@ -2,15 +2,23 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "../auth/hooks/useAuth";
 import { createCanvasDocument } from "../canvas/canvas-document";
 import { generatePageFromPrompt } from "../../lib/ai-generator";
-import { listRemotePages, saveRemotePage, sendAiChat, uploadImage, type ChatMessage } from "../../lib/api-client";
+import {
+  deleteRemotePage,
+  listRemotePages,
+  saveRemotePage,
+  sendAiChat,
+  uploadImage,
+  type ChatMessage,
+} from "../../lib/api-client";
 import { buildPageSource, type ExportTarget } from "../../lib/code-export";
 import { downloadFile } from "../../lib/download";
-import { layerConfig } from "./layer-config";
+import { createLayout, layerConfig, type LayoutOption } from "./layer-config";
 import { useWorkspaceAccess } from "./useWorkspaceAccess";
 import type { NodeStyles } from "@visual-builder/document-schema";
 import {
   layersToPage,
   findLayer,
+  findParentLayer,
   flattenLayers,
   removeLayerTree,
   updateLayerTree,
@@ -22,34 +30,60 @@ import {
 } from "../../lib/page-model";
 
 const initialItems = pageToLayers(pageTemplate);
-const firstMainHeading = (layers: EditorLayer[]) => flattenLayers(layers).find(({ item }) => item.type === "heading" && item.level === "h1")?.item.id;
-const initialSelection = firstMainHeading(initialItems) ?? initialItems[0]?.id ?? "";
+const firstMainHeading = (layers: EditorLayer[]) =>
+  flattenLayers(layers).find(
+    ({ item }) => item.type === "heading" && item.level === "h1",
+  )?.item.id;
+const initialSelection =
+  firstMainHeading(initialItems) ?? initialItems[0]?.id ?? "";
 type EditorPage = { id: string; name: string; items: EditorLayer[] };
 type Tab = "layers" | "blocks";
 type InspectorTab = "style" | "content";
 
-function readPages(key: string, userId: string, authEnabled: boolean): EditorPage[] {
+function readPages(
+  key: string,
+  userId: string,
+  authEnabled: boolean,
+): EditorPage[] {
   try {
     const serialized = localStorage.getItem(`canvas-builder-pages:${key}`);
     if (serialized) {
       const value: unknown = JSON.parse(serialized);
       if (Array.isArray(value)) {
         const pages = value.flatMap((page): EditorPage[] => {
-          if (typeof page !== "object" || page === null || !("id" in page) || !("name" in page) || !("items" in page)) return [];
+          if (
+            typeof page !== "object" ||
+            page === null ||
+            !("id" in page) ||
+            !("name" in page) ||
+            !("items" in page)
+          )
+            return [];
           const items = parseSavedLayers(JSON.stringify(page.items));
-          return typeof page.id === "string" && typeof page.name === "string" && items
+          return typeof page.id === "string" &&
+            typeof page.name === "string" &&
+            items
             ? [{ id: page.id, name: page.name, items }]
             : [];
         });
         if (pages.length) return pages;
       }
     }
-  } catch { /* recover from the existing single-page save below */ }
+  } catch {
+    /* recover from the existing single-page save below */
+  }
 
-  const oldPage = localStorage.getItem(`canvas-builder-page:${key}`)
-    ?? localStorage.getItem(`canvas-builder-page:${userId}`)
-    ?? (!authEnabled ? localStorage.getItem("canvas-builder-page") : null);
-  return [{ id: "home-page", name: "Home page", items: parseSavedLayers(oldPage) ?? initialItems }];
+  const oldPage =
+    localStorage.getItem(`canvas-builder-page:${key}`) ??
+    localStorage.getItem(`canvas-builder-page:${userId}`) ??
+    (!authEnabled ? localStorage.getItem("canvas-builder-page") : null);
+  return [
+    {
+      id: "home-page",
+      name: "Home page",
+      items: parseSavedLayers(oldPage) ?? initialItems,
+    },
+  ];
 }
 
 export function useEditorController() {
@@ -70,11 +104,17 @@ export function useEditorController() {
   const workspaceAccess = useWorkspaceAccess({ listMembers, inviteMember });
   const workspaceKey = user.workspaceId || user.id;
   const storageKey = `canvas-builder-page:${workspaceKey}`;
-  const [pages, setPages] = useState<EditorPage[]>(() => readPages(workspaceKey, user.id, authEnabled));
-  const [activePageId, setActivePageId] = useState(() => readPages(workspaceKey, user.id, authEnabled)[0]?.id ?? "home-page");
+  const [pages, setPages] = useState<EditorPage[]>(() =>
+    readPages(workspaceKey, user.id, authEnabled),
+  );
+  const [activePageId, setActivePageId] = useState(
+    () => readPages(workspaceKey, user.id, authEnabled)[0]?.id ?? "home-page",
+  );
   const lastWorkspaceKey = useRef(workspaceKey);
   const [items, setItems] = useState<EditorLayer[]>(() => {
-    return readPages(workspaceKey, user.id, authEnabled)[0]?.items ?? initialItems;
+    return (
+      readPages(workspaceKey, user.id, authEnabled)[0]?.items ?? initialItems
+    );
   });
   const [undoStack, setUndoStack] = useState<EditorLayer[][]>([]);
   const [redoStack, setRedoStack] = useState<EditorLayer[][]>([]);
@@ -97,20 +137,31 @@ export function useEditorController() {
   const [exportTarget, setExportTarget] = useState<ExportTarget>("next");
   const [zoom, setZoom] = useState(100);
   const [search, setSearch] = useState("");
-  const selectedId = findLayer(items, selected) ? selected : (items[0]?.id ?? "");
+  const selectedId = findLayer(items, selected)
+    ? selected
+    : (items[0]?.id ?? "");
   const active = findLayer(items, selectedId) ?? items[0];
-  const notice = localNotice || (authNotice !== dismissedAuthNotice ? authNotice : "");
+  const notice =
+    localNotice || (authNotice !== dismissedAuthNotice ? authNotice : "");
   const filteredItems = useMemo(
-    () => flattenLayers(items).filter(({ item }) => item.name.toLowerCase().includes(search.toLowerCase())),
+    () =>
+      flattenLayers(items).filter(({ item }) =>
+        item.name.toLowerCase().includes(search.toLowerCase()),
+      ),
     [items, search],
   );
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
       localStorage.setItem(storageKey, JSON.stringify(layersToPage(items)));
-      localStorage.setItem(`canvas-builder-pages:${workspaceKey}`, JSON.stringify(pages.map((page) =>
-        page.id === activePageId ? { ...page, items } : page,
-      )));
+      localStorage.setItem(
+        `canvas-builder-pages:${workspaceKey}`,
+        JSON.stringify(
+          pages.map((page) =>
+            page.id === activePageId ? { ...page, items } : page,
+          ),
+        ),
+      );
       setSaved(true);
     }, 450);
     return () => window.clearTimeout(timer);
@@ -120,8 +171,11 @@ export function useEditorController() {
     const currentPage = pages.find((page) => page.id === activePageId);
     if (!currentPage) return;
     const timer = window.setTimeout(() => {
-      void saveRemotePage(workspaceKey, { id: currentPage.id, name: currentPage.name, document: layersToPage(items) })
-        .catch(() => undefined);
+      void saveRemotePage(workspaceKey, {
+        id: currentPage.id,
+        name: currentPage.name,
+        document: layersToPage(items),
+      }).catch(() => undefined);
     }, 700);
     return () => window.clearTimeout(timer);
   }, [activePageId, items, pages, workspaceKey]);
@@ -141,26 +195,35 @@ export function useEditorController() {
 
   useEffect(() => {
     let cancelled = false;
-    void listRemotePages(workspaceKey).then((remotePages) => {
-      if (cancelled || !remotePages.length) return;
-      const restored = remotePages.flatMap((page): EditorPage[] => {
-        const items = parseSavedLayers(JSON.stringify(page.document));
-        return items ? [{ id: page.id, name: page.name, items }] : [];
-      });
-      if (!restored.length) return;
-      setPages((localPages) => {
-        const byId = new Map(restored.map((page) => [page.id, page]));
-        localPages.forEach((page) => { if (!byId.has(page.id)) byId.set(page.id, page); });
-        return [...byId.values()];
-      });
-      if (activePageId === "home-page" && items.length === initialItems.length) {
-        setActivePageId(restored[0].id);
-        setItems(restored[0].items);
-      }
-    }).catch(() => undefined);
-    return () => { cancelled = true; };
-  // Load backend pages once on mount; workspace switching uses the local workspace copy.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    void listRemotePages(workspaceKey)
+      .then((remotePages) => {
+        if (cancelled || !remotePages.length) return;
+        const restored = remotePages.flatMap((page): EditorPage[] => {
+          const items = parseSavedLayers(JSON.stringify(page.document));
+          return items ? [{ id: page.id, name: page.name, items }] : [];
+        });
+        if (!restored.length) return;
+        setPages((localPages) => {
+          const byId = new Map(restored.map((page) => [page.id, page]));
+          localPages.forEach((page) => {
+            if (!byId.has(page.id)) byId.set(page.id, page);
+          });
+          return [...byId.values()];
+        });
+        if (
+          activePageId === "home-page" &&
+          items.length === initialItems.length
+        ) {
+          setActivePageId(restored[0].id);
+          setItems(restored[0].items);
+        }
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+    // Load backend pages once on mount; workspace switching uses the local workspace copy.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workspaceKey]);
 
   const setNotice = (message: string) => setLocalNotice(message);
@@ -175,7 +238,11 @@ export function useEditorController() {
     setRedoStack([]);
     setSaved(false);
     setItems(next);
-    setPages((current) => current.map((page) => page.id === activePageId ? { ...page, items: next } : page));
+    setPages((current) =>
+      current.map((page) =>
+        page.id === activePageId ? { ...page, items: next } : page,
+      ),
+    );
   };
 
   const generateFromPrompt = async () => {
@@ -186,21 +253,32 @@ export function useEditorController() {
       const result = await generatePageFromPrompt(aiPrompt.trim());
       const page: EditorPage = {
         id: `page-${crypto.randomUUID()}`,
-        name: aiPrompt.trim().replace(/[.!?].*$/, "").slice(0, 45) || "Generated page",
+        name:
+          aiPrompt
+            .trim()
+            .replace(/[.!?].*$/, "")
+            .slice(0, 45) || "Generated page",
         items: result.items,
       };
-      setPages((current) => [...current.map((item) => item.id === activePageId ? { ...item, items } : item), page]);
+      setPages((current) => [
+        ...current.map((item) =>
+          item.id === activePageId ? { ...item, items } : item,
+        ),
+        page,
+      ]);
       setActivePageId(page.id);
       setItems(result.items);
       setUndoStack([]);
       setRedoStack([]);
       setSaved(false);
-    setSelected(firstMainHeading(result.items) ?? result.items[0]?.id ?? "");
+      setSelected(firstMainHeading(result.items) ?? result.items[0]?.id ?? "");
       setTab("layers");
       setAiOpen(false);
       setNotice("AI generated a new page from your brief.");
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : "Could not generate the page.");
+      setNotice(
+        error instanceof Error ? error.message : "Could not generate the page.",
+      );
     } finally {
       setGenerating(false);
     }
@@ -216,31 +294,47 @@ export function useEditorController() {
     setNotice("");
     try {
       const reply = await sendAiChat(nextMessages);
-      setChatMessages((current) => [...current, { role: "assistant", content: reply }]);
+      setChatMessages((current) => [
+        ...current,
+        { role: "assistant", content: reply },
+      ]);
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : "Could not reach the AI assistant.");
+      setNotice(
+        error instanceof Error
+          ? error.message
+          : "Could not reach the AI assistant.",
+      );
     } finally {
       setChatSending(false);
     }
   };
 
-  const update = (key: "name" | "text" | "color" | "fontSize" | "level" | "styles", value: string | number | NodeStyles) => {
+  const update = (
+    key: "name" | "text" | "color" | "fontSize" | "level" | "styles",
+    value: string | number | NodeStyles,
+  ) => {
     if (!canEdit) return;
-    commit(updateLayerTree(items, selectedId, (item) => {
-      if (key !== "text" || item.type !== "section") return { ...item, [key]: value };
-      let updatedFirstText = false;
-      const children = item.children?.map((child) => {
-        if (!updatedFirstText && child.type === "text") {
-          updatedFirstText = true;
-          return { ...child, text: String(value) };
-        }
-        return child;
-      });
-      return { ...item, text: String(value), children };
-    }));
+    commit(
+      updateLayerTree(items, selectedId, (item) => {
+        if (key !== "text" || item.type !== "section")
+          return { ...item, [key]: value };
+        let updatedFirstText = false;
+        const children = item.children?.map((child) => {
+          if (!updatedFirstText && child.type === "text") {
+            updatedFirstText = true;
+            return { ...child, text: String(value) };
+          }
+          return child;
+        });
+        return { ...item, text: String(value), children };
+      }),
+    );
   };
 
-  const updateStyle = (key: keyof NodeStyles, value: NodeStyles[keyof NodeStyles]) => {
+  const updateStyle = (
+    key: keyof NodeStyles,
+    value: NodeStyles[keyof NodeStyles],
+  ) => {
     if (!canEdit) return;
     update("styles", { ...active?.styles, [key]: value });
   };
@@ -252,7 +346,11 @@ export function useEditorController() {
     setRedoStack((stack) => [...stack, items]);
     setUndoStack((stack) => stack.slice(0, -1));
     setItems(previous);
-    setPages((current) => current.map((page) => page.id === activePageId ? { ...page, items: previous } : page));
+    setPages((current) =>
+      current.map((page) =>
+        page.id === activePageId ? { ...page, items: previous } : page,
+      ),
+    );
     setSaved(false);
   };
 
@@ -263,36 +361,59 @@ export function useEditorController() {
     setUndoStack((stack) => [...stack, items]);
     setRedoStack((stack) => stack.slice(0, -1));
     setItems(next);
-    setPages((current) => current.map((page) => page.id === activePageId ? { ...page, items: next } : page));
+    setPages((current) =>
+      current.map((page) =>
+        page.id === activePageId ? { ...page, items: next } : page,
+      ),
+    );
     setSaved(false);
   };
 
-  const exportProject = () => downloadFile(
-    JSON.stringify(layersToPage(items), null, 2),
-    "north-studio.canvas.json",
-    "application/json",
-  );
+  const exportProject = () =>
+    downloadFile(
+      JSON.stringify(layersToPage(items), null, 2),
+      "north-studio.canvas.json",
+      "application/json",
+    );
 
   const exportCode = () => {
     const source = buildPageSource(createCanvasDocument(items), exportTarget);
-    downloadFile(source, exportTarget === "next" ? "app-page.tsx" : "Page.tsx", "text/plain;charset=utf-8");
+    downloadFile(
+      source,
+      exportTarget === "next" ? "app-page.tsx" : "Page.tsx",
+      "text/plain;charset=utf-8",
+    );
     setExportOpen(false);
   };
 
   const saveNow = () => {
     localStorage.setItem(storageKey, JSON.stringify(layersToPage(items)));
-    localStorage.setItem(`canvas-builder-pages:${workspaceKey}`, JSON.stringify(pages.map((page) =>
-      page.id === activePageId ? { ...page, items } : page,
-    )));
+    localStorage.setItem(
+      `canvas-builder-pages:${workspaceKey}`,
+      JSON.stringify(
+        pages.map((page) =>
+          page.id === activePageId ? { ...page, items } : page,
+        ),
+      ),
+    );
     const activePage = pages.find((page) => page.id === activePageId);
-    if (activePage) void saveRemotePage(workspaceKey, { id: activePage.id, name: activePage.name, document: layersToPage(items) }).catch(() => undefined);
+    if (activePage)
+      void saveRemotePage(workspaceKey, {
+        id: activePage.id,
+        name: activePage.name,
+        document: layersToPage(items),
+      }).catch(() => undefined);
     setSaved(true);
   };
 
   const switchPage = (id: string) => {
     const target = pages.find((page) => page.id === id);
     if (!target || target.id === activePageId) return;
-    setPages((current) => current.map((page) => page.id === activePageId ? { ...page, items } : page));
+    setPages((current) =>
+      current.map((page) =>
+        page.id === activePageId ? { ...page, items } : page,
+      ),
+    );
     setActivePageId(target.id);
     setItems(target.items);
     setSelected(firstMainHeading(target.items) ?? target.items[0]?.id ?? "");
@@ -310,7 +431,12 @@ export function useEditorController() {
       name: pageNumber === 2 ? "Untitled page" : `Page ${pageNumber}`,
       items: [],
     };
-    setPages((current) => [...current.map((item) => item.id === activePageId ? { ...item, items } : item), page]);
+    setPages((current) => [
+      ...current.map((item) =>
+        item.id === activePageId ? { ...item, items } : item,
+      ),
+      page,
+    ]);
     setActivePageId(page.id);
     setItems(page.items);
     setSelected("");
@@ -323,22 +449,148 @@ export function useEditorController() {
   const renamePage = (id: string, name: string) => {
     const safeName = name.trim().slice(0, 60);
     if (!canEdit || !safeName) return;
-    setPages((current) => current.map((page) => page.id === id ? { ...page, name: safeName } : page));
+    setPages((current) =>
+      current.map((page) =>
+        page.id === id ? { ...page, name: safeName } : page,
+      ),
+    );
+    setSaved(false);
+  };
+
+  const duplicatePage = (id: string) => {
+    if (!canEdit) return;
+    const source = pages.find((page) => page.id === id);
+    if (!source) return;
+    const duplicate: EditorPage = {
+      id: `page-${crypto.randomUUID()}`,
+      name: `${source.name} copy`.slice(0, 60),
+      items: source.id === activePageId ? items : source.items,
+    };
+    setPages((current) => [
+      ...current.map((page) => page.id === activePageId ? { ...page, items } : page),
+      duplicate,
+    ]);
+    setActivePageId(duplicate.id);
+    setItems(duplicate.items);
+    setSelected(firstMainHeading(duplicate.items) ?? duplicate.items[0]?.id ?? "");
+    setUndoStack([]);
+    setRedoStack([]);
+    setSearch("");
+    setSaved(false);
+    setTab("layers");
+  };
+
+  const deletePage = (id: string) => {
+    if (!canEdit || pages.length <= 1) return;
+    const pageIndex = pages.findIndex((page) => page.id === id);
+    if (pageIndex < 0) return;
+    const remaining = pages
+      .map((page) => page.id === activePageId ? { ...page, items } : page)
+      .filter((page) => page.id !== id);
+    setPages(remaining);
+    void deleteRemotePage(workspaceKey, id).catch(() => undefined);
+    if (id === activePageId) {
+      const nextPage = remaining[Math.min(pageIndex, remaining.length - 1)] ?? remaining[0];
+      setActivePageId(nextPage.id);
+      setItems(nextPage.items);
+      setSelected(firstMainHeading(nextPage.items) ?? nextPage.items[0]?.id ?? "");
+      setUndoStack([]);
+      setRedoStack([]);
+      setSearch("");
+    }
     setSaved(false);
   };
 
   const addItem = (type: LayerType) => {
     if (!canEdit) return;
     const id = `${type}-${crypto.randomUUID()}`;
-    commit([...items, {
+    const newItem: EditorLayer = {
       id,
       type,
       name: layerConfig[type].label,
       text: layerConfig[type].defaultText,
       visible: true,
       styles: layerConfig[type].styles,
-    }]);
+      children: type === "section" ? [] : undefined,
+    };
+    const selectedLayer = findLayer(items, selectedId);
+    const selectedParent = findParentLayer(items, selectedId);
+    const insertionTarget =
+      selectedLayer?.type === "section"
+        ? selectedLayer
+        : selectedParent?.type === "section"
+          ? selectedParent
+          : undefined;
+    const next = insertionTarget
+      ? updateLayerTree(items, insertionTarget.id, (layer) => ({
+          ...layer,
+          children: [...(layer.children ?? []), newItem],
+        }))
+      : [...items, newItem];
+    commit(next);
     setSelected(id);
+    setSearch("");
+    setTab("layers");
+  };
+
+  const addInsertPreset = (preset: "text-link" | "blockquote") => {
+    if (!canEdit) return;
+    const isLink = preset === "text-link";
+    const id = `${preset}-${crypto.randomUUID()}`;
+    const item: EditorLayer = {
+      id,
+      type: isLink ? "button" : "text",
+      name: isLink ? "Text link" : "Blockquote",
+      text: isLink ? "Learn more" : "Add a quote that supports your story.",
+      visible: true,
+      ...(isLink ? { href: "#", variant: "outline" as const } : {}),
+      styles: isLink
+        ? {
+            display: "inline-block",
+            padding: "0",
+            margin: "8px 0",
+            color: "#4f46e5",
+            backgroundColor: "transparent",
+            textDecoration: "underline",
+            fontSize: "16px",
+          }
+        : {
+            margin: "16px 0",
+            padding: "8px 0 8px 18px",
+            borderLeft: "3px solid #a5a3f5",
+            color: "#555866",
+            fontSize: "18px",
+            lineHeight: 1.6,
+            fontStyle: "italic",
+          },
+    };
+    const selectedLayer = findLayer(items, selectedId);
+    const selectedParent = findParentLayer(items, selectedId);
+    const insertionTarget =
+      selectedLayer?.type === "section"
+        ? selectedLayer
+        : selectedParent?.type === "section"
+          ? selectedParent
+          : undefined;
+    const next = insertionTarget
+      ? updateLayerTree(items, insertionTarget.id, (layer) => ({
+          ...layer,
+          children: [...(layer.children ?? []), item],
+        }))
+      : [...items, item];
+    commit(next);
+    setSelected(id);
+    setSearch("");
+    setTab("layers");
+  };
+
+  const addLayout = (layoutType: LayoutOption["id"]) => {
+    if (!canEdit) return;
+    const id = `${layoutType}-${crypto.randomUUID()}`;
+    const { layer, selectedId: initialSelectedId } = createLayout(layoutType, id);
+    commit([...items, layer]);
+    setSelected(initialSelectedId);
+    setSearch("");
     setTab("layers");
   };
 
@@ -348,15 +600,44 @@ export function useEditorController() {
       const src = await uploadImage(file);
       const selectedLayer = findLayer(items, selectedId);
       if (selectedLayer?.type === "image") {
-        commit(updateLayerTree(items, selectedId, (item) => ({ ...item, src, text: file.name })));
+        commit(
+          updateLayerTree(items, selectedId, (item) => ({
+            ...item,
+            src,
+            text: file.name,
+          })),
+        );
         return;
       }
       const id = `image-${crypto.randomUUID()}`;
-      commit([...items, { id, type: "image", name: file.name, text: file.name, src, visible: true }]);
+      const image: EditorLayer = {
+        id,
+        type: "image",
+        name: file.name,
+        text: file.name,
+        src,
+        visible: true,
+      };
+      const selectedParent = findParentLayer(items, selectedId);
+      const insertionTarget =
+        selectedLayer?.type === "section"
+          ? selectedLayer
+          : selectedParent?.type === "section"
+            ? selectedParent
+            : undefined;
+      const next = insertionTarget
+        ? updateLayerTree(items, insertionTarget.id, (layer) => ({
+            ...layer,
+            children: [...(layer.children ?? []), image],
+          }))
+        : [...items, image];
+      commit(next);
       setSelected(id);
       setTab("layers");
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : "Could not load the image.");
+      setNotice(
+        error instanceof Error ? error.message : "Could not load the image.",
+      );
     }
   };
 
@@ -383,7 +664,12 @@ export function useEditorController() {
   const toggleVisibility = (id: string) => {
     const layer = findLayer(items, id);
     if (!layer) return;
-    commit(updateLayerTree(items, id, (current) => ({ ...current, visible: !current.visible })));
+    commit(
+      updateLayerTree(items, id, (current) => ({
+        ...current,
+        visible: !current.visible,
+      })),
+    );
   };
 
   const loadDemoSite = () => {
@@ -408,7 +694,8 @@ export function useEditorController() {
     items,
     pages,
     activePageId,
-    activePageName: pages.find((page) => page.id === activePageId)?.name ?? "Home page",
+    activePageName:
+      pages.find((page) => page.id === activePageId)?.name ?? "Home page",
     setItems,
     undoStack,
     redoStack,
@@ -460,7 +747,11 @@ export function useEditorController() {
     switchPage,
     addPage,
     renamePage,
+    duplicatePage,
+    deletePage,
     addItem,
+    addInsertPreset,
+    addLayout,
     addAsset,
     removeItem,
     reorderItems,

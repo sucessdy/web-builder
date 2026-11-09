@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Headers, NotFoundException, Param, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Headers, NotFoundException, Param, Put } from "@nestjs/common";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
@@ -49,5 +49,15 @@ export class PagesController {
     const page = (await readPages()).find((item) => item.id === id && item.workspaceId === (workspaceId || "local"));
     if (!page) throw new NotFoundException("Page not found.");
     return page;
+  }
+
+  @Delete(":id")
+  async remove(@Param("id") id: string, @Headers("x-workspace-id") workspaceId?: string) {
+    const owner = workspaceId || "local";
+    const pages = await readPages();
+    const remaining = pages.filter((page) => page.id !== id || page.workspaceId !== owner);
+    if (remaining.length === pages.length) throw new NotFoundException("Page not found.");
+    await writePages(remaining);
+    return { deleted: true };
   }
 }
