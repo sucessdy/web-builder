@@ -1,6 +1,7 @@
 import { EditorCanvasPanel, EditorHeader } from "./features/editor/EditorChrome";
 import { EditorDialogs } from "./features/editor/EditorDialogs";
-import { EditorSidebar, InspectorPanel } from "./features/editor/EditorPanels";
+import { EditorSidebar } from "./features/editor/EditorPanels";
+import { InspectorPanel } from "./features/editor/components/InspectorPanel";
 import { useEditorController } from "./features/editor/useEditorController";
 import { Icon } from "./features/icons/Icon";
 import { useThemeContext } from "./theme/ThemeProvider";
@@ -95,7 +96,7 @@ function App() {
   } = editor;
 
   return (
-    <div className="builder-shell">
+    <div className="flex h-dvh min-h-170 flex-col overflow-hidden bg-(--editor-bg) font-sans text-(--editor-text)">
       <EditorHeader
         pageName={activePageName}
         theme={theme}
@@ -119,7 +120,7 @@ function App() {
         }}
       />
 
-      <div className="workspace">
+      <div className="flex min-h-0 flex-1">
         <EditorSidebar
           Icon={Icon}
           user={user}

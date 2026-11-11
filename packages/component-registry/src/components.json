@@ -1,0 +1,112 @@
+{
+  "heading": {
+    "label": "Heading",
+    "insertLabel": "Heading",
+    "description": "H1 heading",
+    "category": "Typography",
+    "icon": "type",
+    "defaultText": "A fresh idea.",
+    "defaultProps": { "text": "A fresh idea.", "level": "h1" },
+    "defaultStyles": {
+      "margin": "25px 0 8px",
+      "color": "#272923",
+      "fontFamily": "Manrope",
+      "fontSize": "27px",
+      "fontWeight": 500,
+      "lineHeight": 1.2,
+      "letterSpacing": "-1px"
+    },
+    "editableProps": [
+      { "name": "text", "label": "Text", "control": "text" },
+      { "name": "level", "label": "Heading level", "control": "select" }
+    ]
+  },
+  "text": {
+    "label": "Text block",
+    "insertLabel": "Paragraph",
+    "description": "Paragraph text",
+    "category": "Typography",
+    "icon": "text",
+    "defaultText": "Write something meaningful here.",
+    "defaultProps": { "text": "Write something meaningful here." },
+    "defaultStyles": {
+      "maxWidth": "340px",
+      "margin": "8px 0",
+      "color": "#686a62",
+      "fontSize": "12px",
+      "lineHeight": 1.6
+    },
+    "editableProps": [
+      { "name": "text", "label": "Text", "control": "textarea" }
+    ]
+  },
+  "container": {
+    "label": "Container",
+    "insertLabel": "Section",
+    "description": "Content area",
+    "category": "Elements",
+    "icon": "grid",
+    "defaultText": "New section",
+    "defaultProps": {},
+    "defaultStyles": {
+      "width": "100%",
+      "minHeight": "42px",
+      "padding": "12px",
+      "color": "#aaa99f",
+      "backgroundColor": "#f1f0ea",
+      "borderWidth": "1px",
+      "borderStyle": "dashed",
+      "borderColor": "#d6d4ca"
+    },
+    "editableProps": []
+  },
+  "button": {
+    "label": "Button",
+    "insertLabel": "Button",
+    "description": "Clickable button",
+    "category": "Elements",
+    "icon": "cursor",
+    "defaultText": "Learn more",
+    "defaultProps": { "label": "Learn more", "href": "#", "variant": "primary" },
+    "defaultStyles": {
+      "display": "inline-flex",
+      "alignItems": "center",
+      "gap": "8px",
+      "margin": "12px 0",
+      "padding": "11px 15px",
+      "color": "#ffffff",
+      "backgroundColor": "#d87553",
+      "borderRadius": "3px",
+      "fontSize": "12px",
+      "fontWeight": 600,
+      "textDecoration": "none"
+    },
+    "editableProps": [
+      { "name": "label", "label": "Button label", "control": "text" },
+      { "name": "href", "label": "Link", "control": "text" },
+      { "name": "variant", "label": "Style", "control": "select" }
+    ]
+  },
+  "image": {
+    "label": "Image",
+    "insertLabel": "Image",
+    "description": "Image content",
+    "category": "Elements",
+    "icon": "image",
+    "defaultText": "Your image",
+    "defaultProps": { "src": "https://placehold.co/600x400", "alt": "Your image", "objectFit": "cover" },
+    "defaultStyles": {
+      "display": "block",
+      "width": "100%",
+      "maxWidth": "340px",
+      "minHeight": "110px",
+      "margin": "12px 0",
+      "borderRadius": "4px"
+    },
+    "editableProps": [
+      { "name": "src", "label": "Image URL", "control": "text" },
+      { "name": "alt", "label": "Alternative text", "control": "text" },
+      { "name": "objectFit", "label": "Fit", "control": "select" }
+    ]
+  }
+}

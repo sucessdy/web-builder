@@ -8,10 +8,10 @@ import {
 import type {
   PageNode,
 } from "@visual-builder/document-schema";
-import { createCanvasDocument, type CanvasItem } from "./canvas-document";
+import { layersToPage, type EditorLayer } from "../../lib/page-model";
 
 type CanvasProps = {
-  items: CanvasItem[];
+  items: EditorLayer[];
   selectedId: string;
   preview: boolean;
   onSelect: (id: string) => void;
@@ -24,7 +24,7 @@ export function Canvas({
   onSelect,
 }: CanvasProps) {
   const document = useMemo(
-    () => createCanvasDocument(items),
+    () => layersToPage(items),
     [items],
   );
 

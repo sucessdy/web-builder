@@ -1,0 +1,92 @@
+[
+  {
+    "label": "Layout",
+    "controls": [
+      {
+        "key": "display",
+        "label": "Display",
+        "defaultValue": "block",
+        "options": [
+          { "label": "Block", "value": "block" },
+          { "label": "Flex", "value": "flex" },
+          { "label": "Grid", "value": "grid" },
+          { "label": "Inline flex", "value": "inline-flex" }
+        ]
+      },
+      {
+        "key": "flexDirection",
+        "label": "Direction",
+        "defaultValue": "row",
+        "enabledWhen": { "key": "display", "values": ["flex", "inline-flex"] },
+        "options": [
+          { "label": "Row", "value": "row" },
+          { "label": "Column", "value": "column" }
+        ]
+      },
+      {
+        "key": "textAlign",
+        "label": "Text align",
+        "defaultValue": "left",
+        "options": [
+          { "label": "Left", "value": "left" },
+          { "label": "Center", "value": "center" },
+          { "label": "Right", "value": "right" },
+          { "label": "Justify", "value": "justify" }
+        ]
+      },
+      {
+        "key": "alignItems",
+        "label": "Align items",
+        "defaultValue": "stretch",
+        "enabledWhen": { "key": "display", "values": ["flex", "inline-flex", "grid"] },
+        "options": [
+          { "label": "Stretch", "value": "stretch" },
+          { "label": "Start", "value": "flex-start" },
+          { "label": "Center", "value": "center" },
+          { "label": "End", "value": "flex-end" },
+          { "label": "Baseline", "value": "baseline" }
+        ]
+      },
+      {
+        "key": "justifyContent",
+        "label": "Justify",
+        "defaultValue": "flex-start",
+        "enabledWhen": { "key": "display", "values": ["flex", "inline-flex", "grid"] },
+        "options": [
+          { "label": "Start", "value": "flex-start" },
+          { "label": "Center", "value": "center" },
+          { "label": "End", "value": "flex-end" },
+          { "label": "Space between", "value": "space-between" },
+          { "label": "Space around", "value": "space-around" },
+          { "label": "Space evenly", "value": "space-evenly" }
+        ]
+      },
+      {
+        "key": "flexWrap",
+        "label": "Wrap",
+        "defaultValue": "nowrap",
+        "enabledWhen": { "key": "display", "values": ["flex", "inline-flex"] },
+        "options": [
+          { "label": "No wrap", "value": "nowrap" },
+          { "label": "Wrap", "value": "wrap" },
+          { "label": "Reverse", "value": "wrap-reverse" }
+        ]
+      },
+      {
+        "key": "gridTemplateColumns",
+        "label": "Columns",
+        "defaultValue": "1fr",
+        "visibleWhen": { "key": "display", "values": ["grid"] },
+        "options": [
+          { "label": "One column", "value": "1fr" },
+          { "label": "Two columns", "value": "repeat(2, minmax(0, 1fr))" },
+          { "label": "Two equal columns (legacy)", "value": "repeat(2, 1fr)" },
+          { "label": "Main + sidebar", "value": "minmax(0, 1.5fr) minmax(0, 1fr)" },
+          { "label": "Three columns", "value": "repeat(3, minmax(0, 1fr))" },
+          { "label": "Responsive cards", "value": "repeat(auto-fit, minmax(220px, 1fr))" },
+          { "label": "Responsive sections", "value": "repeat(auto-fit, minmax(320px, 1fr))" }
+        ]
+      }
+    ]
+  }
+]

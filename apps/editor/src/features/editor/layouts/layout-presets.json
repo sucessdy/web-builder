@@ -1,0 +1,126 @@
+[
+  {
+    "id": "two-columns",
+    "label": "Two columns",
+    "description": "Side-by-side content",
+    "initialSelection": "left",
+    "styleTokens": {
+      "contentArea": {
+        "minHeight": "180px",
+        "padding": "24px",
+        "border": "1px dashed #c8cad1",
+        "borderRadius": "8px",
+        "backgroundColor": "#fafafa"
+      }
+    },
+    "root": {
+      "key": "root",
+      "name": "Two-column layout",
+      "styles": {
+        "display": "grid",
+        "gridTemplateColumns": "repeat(2, minmax(0, 1fr))",
+        "gap": "24px",
+        "width": "100%",
+        "padding": "32px 6%"
+      },
+      "children": [
+        {
+          "key": "left",
+          "name": "Left content area",
+          "styleRef": "contentArea"
+        },
+        {
+          "key": "right",
+          "name": "Right content area",
+          "styleRef": "contentArea"
+        }
+      ]
+    }
+  },
+  {
+    "id": "quick-stack",
+    "label": "Quick Stack",
+    "description": "One large area, two stacked",
+    "initialSelection": "main",
+    "styleTokens": {
+      "contentArea": {
+        "minHeight": "180px",
+        "padding": "24px",
+        "border": "1px dashed #c8cad1",
+        "borderRadius": "8px",
+        "backgroundColor": "#fafafa"
+      }
+    },
+    "root": {
+      "key": "root",
+      "name": "Quick Stack",
+      "styles": {
+        "display": "grid",
+        "gridTemplateColumns": "minmax(0, 1.5fr) minmax(0, 1fr)",
+        "gap": "24px",
+        "width": "100%",
+        "padding": "32px 6%"
+      },
+      "children": [
+        {
+          "key": "main",
+          "name": "Main content area",
+          "styleRef": "contentArea"
+        },
+        {
+          "key": "stack",
+          "name": "Stacked content",
+          "styles": {
+            "display": "grid",
+            "gridTemplateRows": "repeat(2, minmax(120px, 1fr))",
+            "gap": "16px"
+          },
+          "children": [
+            {
+              "key": "top",
+              "name": "Top content area",
+              "styleRef": "contentArea"
+            },
+            {
+              "key": "bottom",
+              "name": "Bottom content area",
+              "styleRef": "contentArea"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "quick-grid",
+    "label": "Quick Grid",
+    "description": "Four equal content areas",
+    "initialSelection": "area-1",
+    "styleTokens": {
+      "contentArea": {
+        "minHeight": "180px",
+        "padding": "24px",
+        "border": "1px dashed #c8cad1",
+        "borderRadius": "8px",
+        "backgroundColor": "#fafafa"
+      }
+    },
+    "root": {
+      "key": "root",
+      "name": "Quick Grid",
+      "styles": {
+        "display": "grid",
+        "gridTemplateColumns": "repeat(2, minmax(0, 1fr))",
+        "gap": "24px",
+        "width": "100%",
+        "padding": "32px 6%"
+      },
+      "children": [
+        { "key": "area-1", "name": "Grid area 1", "styleRef": "contentArea" },
+        { "key": "area-2", "name": "Grid area 2", "styleRef": "contentArea" },
+        { "key": "area-3", "name": "Grid area 3", "styleRef": "contentArea" },
+        { "key": "area-4", "name": "Grid area 4", "styleRef": "contentArea" }
+      ]
+    }
+  }
+]

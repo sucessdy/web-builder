@@ -12,13 +12,16 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
+    "@visual-builder/component-registry": "workspace:*",
     "@visual-builder/document-schema": "workspace:*",
     "@visual-builder/editor-engine": "workspace:*",
     "appwrite": "^29.1.0",
+    "clsx": "^2.1.1",
     "lucide-react": "^1.66.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
-    "tailwindcss": "^4.3.3"
+    "tailwindcss": "^4.3.3",
+    "zod": "^4.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

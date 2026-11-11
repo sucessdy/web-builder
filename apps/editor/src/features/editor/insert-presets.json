@@ -1,0 +1,32 @@
+[
+  {
+    "id": "text-link",
+    "label": "Text Link",
+    "category": "Typography",
+    "description": "A text link",
+    "icon": "link",
+    "type": "button",
+    "text": "Learn more",
+    "href": "#",
+    "variant": "outline",
+    "styles": {}
+  },
+  {
+    "id": "blockquote",
+    "label": "Blockquote",
+    "category": "Typography",
+    "description": "Emphasized quotation",
+    "icon": "text",
+    "type": "text",
+    "text": "Add a quote that supports your story.",
+    "styles": {
+      "margin": "16px 0",
+      "padding": "8px 0 8px 18px",
+      "borderLeft": "3px solid #a5a3f5",
+      "color": "#555866",
+      "fontSize": "18px",
+      "lineHeight": 1.6,
+      "fontStyle": "italic"
+    }
+  }
+]

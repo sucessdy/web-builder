@@ -8,6 +8,7 @@ import {
 import {
   createDefaultNode,
   type ComponentType,
+  validateComponentProps,
 } from "@visual-builder/component-registry";
 
 export type EditorCommand =
@@ -113,15 +114,6 @@ export function applyCommand(
 
       next = {
         ...document,
-        root: {
-          ...document.root,
-          children: removeNode(document.root.children, command.nodeId),
-        },
-      };
-
-      // Handle deletion at any nesting depth.
-      next = {
-        ...document,
         root: deleteNestedNode(document.root, command.nodeId),
       };
       break;
@@ -132,20 +124,17 @@ export function applyCommand(
   if (!result.success) {
     throw new Error(`Invalid page document: ${result.error.message}`);
   }
+  validateComponentTree(result.data.root);
 
   return result.data;
 }
 
-function removeNode(
-  nodes: PageNode[],
-  nodeId: string,
-): PageNode[] {
-  return nodes
-    .filter((node) => node.id !== nodeId)
-    .map((node) => ({
-      ...node,
-      children: removeNode(node.children, nodeId),
-    }));
+function validateComponentTree(node: PageNode): void {
+  const result = validateComponentProps(node.type, node.props);
+  if (!result.success) {
+    throw new Error(`Invalid properties for ${node.type} node ${node.id}: ${result.error.message}`);
+  }
+  node.children.forEach(validateComponentTree);
 }
 
 function deleteNestedNode(
@@ -154,7 +143,9 @@ function deleteNestedNode(
 ): PageNode {
   return {
     ...node,
-    children: removeNode(node.children, nodeId),
+    children: node.children
+      .filter((child) => child.id !== nodeId)
+      .map((child) => deleteNestedNode(child, nodeId)),
   };
 }
 
@@ -167,6 +158,7 @@ export function createNode(
 
 export function createEditorEngine(initialDocument: PageDocument) {
   const parsed = pageDocumentSchema.parse(initialDocument);
+  validateComponentTree(parsed.root);
   let currentDocument = parsed;
   const undoStack: PageDocument[] = [];
   const redoStack: PageDocument[] = [];
@@ -205,4 +197,4 @@ export function createEditorEngine(initialDocument: PageDocument) {
     },
   };
 }
- 
+

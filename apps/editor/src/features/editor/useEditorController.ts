@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "../auth/hooks/useAuth";
-import { createCanvasDocument } from "../canvas/canvas-document";
 import { generatePageFromPrompt } from "../../lib/ai-generator";
 import {
   deleteRemotePage,
@@ -12,8 +11,12 @@ import {
 } from "../../lib/api-client";
 import { buildPageSource, type ExportTarget } from "../../lib/code-export";
 import { downloadFile } from "../../lib/download";
-import { createLayout, layerConfig, type LayoutOption } from "./layer-config";
+import { layerConfig } from "./layer-config";
+import { createLayout } from "./layouts/create-layout";
+import type { LayoutId } from "./layouts/layout-registry";
+import { insertPresets, type InsertPresetId } from "./insert-presets";
 import { useWorkspaceAccess } from "./useWorkspaceAccess";
+import { useEditorHistory } from "./use-editor-history";
 import type { NodeStyles } from "@visual-builder/document-schema";
 import {
   layersToPage,
@@ -104,26 +107,26 @@ export function useEditorController() {
   const workspaceAccess = useWorkspaceAccess({ listMembers, inviteMember });
   const workspaceKey = user.workspaceId || user.id;
   const storageKey = `canvas-builder-page:${workspaceKey}`;
-  const [pages, setPages] = useState<EditorPage[]>(() =>
-    readPages(workspaceKey, user.id, authEnabled),
-  );
+  const [initialPages] = useState(() => readPages(workspaceKey, user.id, authEnabled));
+  const [pages, setPages] = useState<EditorPage[]>(initialPages);
   const [activePageId, setActivePageId] = useState(
-    () => readPages(workspaceKey, user.id, authEnabled)[0]?.id ?? "home-page",
+    () => initialPages[0]?.id ?? "home-page",
   );
   const lastWorkspaceKey = useRef(workspaceKey);
-  const [items, setItems] = useState<EditorLayer[]>(() => {
-    return (
-      readPages(workspaceKey, user.id, authEnabled)[0]?.items ?? initialItems
-    );
-  });
-  const [undoStack, setUndoStack] = useState<EditorLayer[][]>([]);
-  const [redoStack, setRedoStack] = useState<EditorLayer[][]>([]);
+  const [saved, setSaved] = useState(true);
+  const onItemsChanged = (next: EditorLayer[]) => {
+    setSaved(false);
+    setPages((current) => current.map((page) =>
+      page.id === activePageId ? { ...page, items: next } : page,
+    ));
+  };
+  const history = useEditorHistory(initialPages[0]?.items ?? initialItems, canEdit, onItemsChanged);
+  const { items, undoStack, redoStack, commit, undo, redo, replaceItems } = history;
   const [selected, setSelected] = useState(initialSelection);
   const [tab, setTab] = useState<Tab>("blocks");
   const [inspectorTab, setInspectorTab] = useState<InspectorTab>("style");
   const [device, setDevice] = useState<"desktop" | "mobile">("desktop");
   const [preview, setPreview] = useState(false);
-  const [saved, setSaved] = useState(true);
   const [publishOpen, setPublishOpen] = useState(false);
   const [aiOpen, setAiOpen] = useState(false);
   const [aiPrompt, setAiPrompt] = useState("");
@@ -186,12 +189,10 @@ export function useEditorController() {
     const nextPages = readPages(workspaceKey, user.id, authEnabled);
     setPages(nextPages);
     setActivePageId(nextPages[0]?.id ?? "home-page");
-    setItems(nextPages[0]?.items ?? initialItems);
-    setUndoStack([]);
-    setRedoStack([]);
+    replaceItems(nextPages[0]?.items ?? initialItems);
     setSelected(initialSelection);
     setTab("layers");
-  }, [authEnabled, storageKey, user.id, workspaceKey]);
+  }, [authEnabled, storageKey, user.id, workspaceKey, replaceItems]);
 
   useEffect(() => {
     let cancelled = false;
@@ -215,7 +216,7 @@ export function useEditorController() {
           items.length === initialItems.length
         ) {
           setActivePageId(restored[0].id);
-          setItems(restored[0].items);
+          replaceItems(restored[0].items);
         }
       })
       .catch(() => undefined);
@@ -224,25 +225,12 @@ export function useEditorController() {
     };
     // Load backend pages once on mount; workspace switching uses the local workspace copy.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [workspaceKey]);
+  }, [workspaceKey, replaceItems]);
 
   const setNotice = (message: string) => setLocalNotice(message);
   const dismissNotice = () => {
     setLocalNotice("");
     setDismissedAuthNotice(authNotice);
-  };
-
-  const commit = (next: EditorLayer[]) => {
-    if (!canEdit) return;
-    setUndoStack((stack) => [...stack.slice(-29), items]);
-    setRedoStack([]);
-    setSaved(false);
-    setItems(next);
-    setPages((current) =>
-      current.map((page) =>
-        page.id === activePageId ? { ...page, items: next } : page,
-      ),
-    );
   };
 
   const generateFromPrompt = async () => {
@@ -267,9 +255,7 @@ export function useEditorController() {
         page,
       ]);
       setActivePageId(page.id);
-      setItems(result.items);
-      setUndoStack([]);
-      setRedoStack([]);
+      replaceItems(result.items);
       setSaved(false);
       setSelected(firstMainHeading(result.items) ?? result.items[0]?.id ?? "");
       setTab("layers");
@@ -339,36 +325,6 @@ export function useEditorController() {
     update("styles", { ...active?.styles, [key]: value });
   };
 
-  const undo = () => {
-    if (!canEdit) return;
-    const previous = undoStack.at(-1);
-    if (!previous) return;
-    setRedoStack((stack) => [...stack, items]);
-    setUndoStack((stack) => stack.slice(0, -1));
-    setItems(previous);
-    setPages((current) =>
-      current.map((page) =>
-        page.id === activePageId ? { ...page, items: previous } : page,
-      ),
-    );
-    setSaved(false);
-  };
-
-  const redo = () => {
-    if (!canEdit) return;
-    const next = redoStack.at(-1);
-    if (!next) return;
-    setUndoStack((stack) => [...stack, items]);
-    setRedoStack((stack) => stack.slice(0, -1));
-    setItems(next);
-    setPages((current) =>
-      current.map((page) =>
-        page.id === activePageId ? { ...page, items: next } : page,
-      ),
-    );
-    setSaved(false);
-  };
-
   const exportProject = () =>
     downloadFile(
       JSON.stringify(layersToPage(items), null, 2),
@@ -377,7 +333,7 @@ export function useEditorController() {
     );
 
   const exportCode = () => {
-    const source = buildPageSource(createCanvasDocument(items), exportTarget);
+    const source = buildPageSource(layersToPage(items), exportTarget);
     downloadFile(
       source,
       exportTarget === "next" ? "app-page.tsx" : "Page.tsx",
@@ -415,10 +371,8 @@ export function useEditorController() {
       ),
     );
     setActivePageId(target.id);
-    setItems(target.items);
+    replaceItems(target.items);
     setSelected(firstMainHeading(target.items) ?? target.items[0]?.id ?? "");
-    setUndoStack([]);
-    setRedoStack([]);
     setSearch("");
     setSaved(true);
   };
@@ -438,10 +392,8 @@ export function useEditorController() {
       page,
     ]);
     setActivePageId(page.id);
-    setItems(page.items);
+    replaceItems(page.items);
     setSelected("");
-    setUndoStack([]);
-    setRedoStack([]);
     setSaved(false);
     setTab("layers");
   };
@@ -471,10 +423,8 @@ export function useEditorController() {
       duplicate,
     ]);
     setActivePageId(duplicate.id);
-    setItems(duplicate.items);
+    replaceItems(duplicate.items);
     setSelected(firstMainHeading(duplicate.items) ?? duplicate.items[0]?.id ?? "");
-    setUndoStack([]);
-    setRedoStack([]);
     setSearch("");
     setSaved(false);
     setTab("layers");
@@ -492,10 +442,8 @@ export function useEditorController() {
     if (id === activePageId) {
       const nextPage = remaining[Math.min(pageIndex, remaining.length - 1)] ?? remaining[0];
       setActivePageId(nextPage.id);
-      setItems(nextPage.items);
+      replaceItems(nextPage.items);
       setSelected(firstMainHeading(nextPage.items) ?? nextPage.items[0]?.id ?? "");
-      setUndoStack([]);
-      setRedoStack([]);
       setSearch("");
     }
     setSaved(false);
@@ -533,36 +481,20 @@ export function useEditorController() {
     setTab("layers");
   };
 
-  const addInsertPreset = (preset: "text-link" | "blockquote") => {
+  const addInsertPreset = (presetId: InsertPresetId) => {
     if (!canEdit) return;
-    const isLink = preset === "text-link";
-    const id = `${preset}-${crypto.randomUUID()}`;
+    const preset = insertPresets.find(({ id }) => id === presetId);
+    if (!preset) return;
+    const id = `${preset.id}-${crypto.randomUUID()}`;
     const item: EditorLayer = {
       id,
-      type: isLink ? "button" : "text",
-      name: isLink ? "Text link" : "Blockquote",
-      text: isLink ? "Learn more" : "Add a quote that supports your story.",
+      type: preset.type,
+      name: preset.label,
+      text: preset.text,
       visible: true,
-      ...(isLink ? { href: "#", variant: "outline" as const } : {}),
-      styles: isLink
-        ? {
-            display: "inline-block",
-            padding: "0",
-            margin: "8px 0",
-            color: "#4f46e5",
-            backgroundColor: "transparent",
-            textDecoration: "underline",
-            fontSize: "16px",
-          }
-        : {
-            margin: "16px 0",
-            padding: "8px 0 8px 18px",
-            borderLeft: "3px solid #a5a3f5",
-            color: "#555866",
-            fontSize: "18px",
-            lineHeight: 1.6,
-            fontStyle: "italic",
-          },
+      href: preset.href,
+      variant: preset.variant,
+      styles: preset.styles,
     };
     const selectedLayer = findLayer(items, selectedId);
     const selectedParent = findParentLayer(items, selectedId);
@@ -584,7 +516,7 @@ export function useEditorController() {
     setTab("layers");
   };
 
-  const addLayout = (layoutType: LayoutOption["id"]) => {
+  const addLayout = (layoutType: LayoutId) => {
     if (!canEdit) return;
     const id = `${layoutType}-${crypto.randomUUID()}`;
     const { layer, selectedId: initialSelectedId } = createLayout(layoutType, id);
@@ -696,7 +628,6 @@ export function useEditorController() {
     activePageId,
     activePageName:
       pages.find((page) => page.id === activePageId)?.name ?? "Home page",
-    setItems,
     undoStack,
     redoStack,
     selectedId,

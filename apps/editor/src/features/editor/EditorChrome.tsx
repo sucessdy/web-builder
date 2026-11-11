@@ -1,6 +1,7 @@
+import clsx from "clsx";
 import type { AuthUser } from "../auth/context/auth-context";
 import { Canvas } from "../canvas/Canvas";
-import type { CanvasItem } from "../canvas/canvas-document";
+import type { EditorLayer } from "../../lib/page-model";
 import { Icon } from "../icons/Icon";
 
 type HeaderProps = {
@@ -41,23 +42,40 @@ export function EditorHeader({
   onToggleTheme,
 }: HeaderProps) {
   return (
-    <header className="topbar">
+    <header className="topbar animate-fade-in">
       <div className="brand">
-        <div className="brand-mark"><span /></div>
-        <span>canvas<span className="brand-dot">.</span></span>
+        <div className="brand-mark">
+          <span />
+        </div>
+        <span>
+          canvas<span className="brand-dot">.</span>
+        </span>
         <span className="brand-divider" />
-        <span className="project-name">Untitled website <Icon name="chevron" size={14} /></span>
+        <span className="project-name">
+          Untitled website <Icon name="chevron" size={14} />
+        </span>
       </div>
       <div className="top-center">
         <span className={`save-dot ${saved ? "is-saved" : ""}`} />
         {saved ? "All changes saved" : "Unsaved changes"}
-        <span className="top-separator" /> <span className="page-path">{pageName}</span>
+        <span className="top-separator" />{" "}
+        <span className="page-path">{pageName}</span>
       </div>
       <div className="top-actions">
-        <button className="icon-button" title="Undo" onClick={onUndo} disabled={!canEdit || !undoCount}>
+        <button
+          className="icon-button"
+          title="Undo"
+          onClick={onUndo}
+          disabled={!canEdit || !undoCount}
+        >
           <Icon name="undo" size={17} />
         </button>
-        <button className="icon-button" title="Redo" onClick={onRedo} disabled={!canEdit || !redoCount}>
+        <button
+          className="icon-button"
+          title="Redo"
+          onClick={onRedo}
+          disabled={!canEdit || !redoCount}
+        >
           <Icon name="redo" size={17} />
         </button>
         <button
@@ -71,13 +89,23 @@ export function EditorHeader({
           <Icon name={theme === "dark" ? "sun" : "moon"} size={17} />
         </button>
         <span className="top-separator" />
-        <button className="share-button" onClick={onShare} disabled={!canShare}>Share</button>
-        <button className="publish-button" onClick={onPublish} disabled={!canPublish}>
+        <button className="share-button" onClick={onShare} disabled={!canShare}>
+          Share
+        </button>
+        <button
+          className="publish-button"
+          onClick={onPublish}
+          disabled={!canPublish}
+        >
           <Icon name="check" size={15} /> Publish
         </button>
         <button
           className="avatar account-avatar"
-          title={authEnabled ? `Signed in as ${user.email}. Click to sign out.` : "Local preview account"}
+          title={
+            authEnabled
+              ? `Signed in as ${user.email}. Click to sign out.`
+              : "Local preview account"
+          }
           onClick={onSignOut}
         >
           {(user.name?.[0] ?? user.email[0] ?? "M").toUpperCase()}
@@ -89,7 +117,7 @@ export function EditorHeader({
 
 type CanvasPanelProps = {
   pageName: string;
-  items: CanvasItem[];
+  items: EditorLayer[];
   selectedId: string;
   activeName?: string;
   device: "desktop" | "mobile";
@@ -121,45 +149,102 @@ export function EditorCanvasPanel({
   onSaveNow,
 }: CanvasPanelProps) {
   return (
-    <main className="editor-main">
-      <div className="canvas-toolbar">
-        <div className="canvas-breadcrumb">
-          <span>{pageName}</span><span className="crumb-slash">/</span><span>{activeName}</span>
+    <main className="editor-main flex min-h-0 min-w-75 flex-1 flex-col bg-(--editor-bg)">
+      <div className="canvas-toolbar flex h-12 flex-none items-center justify-between border-b border-(--editor-border) bg-(--panel-bg) px-5">
+        <div className="canvas-breadcrumb flex items-center gap-2">
+          <span>{pageName}</span>
+          <span className="crumb-slash">/</span>
+          <span>{activeName}</span>
         </div>
-        <div className="canvas-tools">
-          <button className={`tool-button ${device === "desktop" ? "tool-selected" : ""}`} onClick={() => onDeviceChange("desktop")} title="Desktop">
+        <div className="canvas-tools flex items-center gap-1">
+          <button
+            className={clsx(
+              "tool-button h-7 w-7.25 rounded-md",
+              device === "desktop" && "tool-selected",
+            )}
+            onClick={() => onDeviceChange("desktop")}
+            title="Desktop"
+          >
             <Icon name="desktop" size={16} />
           </button>
-          <button className={`tool-button ${device === "mobile" ? "tool-selected" : ""}`} onClick={() => onDeviceChange("mobile")} title="Mobile">
+          <button
+            className={clsx(
+              "tool-button h-7 w-7.25 rounded-md",
+              device === "mobile" && "tool-selected",
+            )}
+            onClick={() => onDeviceChange("mobile")}
+            title="Mobile"
+          >
             <Icon name="mobile" size={16} />
           </button>
           <span className="tool-divider" />
-          <button className={`tool-button ${preview ? "tool-selected" : ""}`} onClick={onPreviewToggle} title="Preview">
+          <button
+            className={clsx(
+              "tool-button h-7 w-7.25 rounded-md",
+              preview && "tool-selected",
+            )}
+            onClick={onPreviewToggle}
+            title="Preview"
+          >
             <Icon name="eye" size={17} />
           </button>
           <span className="tool-divider" />
-          <button className="zoom-control" onClick={onZoom}>{zoom}% <Icon name="chevron" size={13} /></button>
-          <button className="tool-button" title="Export project JSON" onClick={onExportProject}>
+          <button className="zoom-control" onClick={onZoom}>
+            {zoom}% <Icon name="chevron" size={13} />
+          </button>
+          <button
+            className="tool-button"
+            title="Export project JSON"
+            onClick={onExportProject}
+          >
             <Icon name="download" size={16} />
           </button>
-          <button className="tool-button" title="Export React or Next.js code" onClick={onExportCode}>
+          <button
+            className="tool-button"
+            title="Export React or Next.js code"
+            onClick={onExportCode}
+          >
             <Icon name="code" size={16} />
           </button>
         </div>
       </div>
-      <div className="canvas-stage">
+      <div className="canvas-stage relative flex min-h-0 flex-1 flex-col items-center justify-start overflow-auto px-7.5 pb-5 pt-9.5 max-[820px]:px-3.75 max-[820px]:pt-5">
         <div
-          className={`page-canvas ${device === "mobile" ? "mobile-canvas" : ""} ${preview ? "preview-mode" : ""}`}
+          className={clsx(
+            "page-canvas",
+            device === "mobile" && "mobile-canvas",
+            preview && "preview-mode",
+          )}
           style={{ transform: `scale(${zoom / 100})` }}
         >
-          <Canvas items={items} selectedId={selectedId} preview={preview} onSelect={onSelect} />
+          <Canvas
+            items={items}
+            selectedId={selectedId}
+            preview={preview}
+            onSelect={onSelect}
+          />
         </div>
-        <div className="canvas-outside-label">Designed with <b>canvas<span>.</span></b></div>
+        <div className="canvas-outside-label">
+          Designed with{" "}
+          <b>
+            canvas<span>.</span>
+          </b>
+        </div>
       </div>
-      <div className="bottom-bar">
-        <span><span className="online-dot" /> Live canvas</span>
+      <div className="bottom-bar flex h-7.75 flex-none items-center gap-4.5 border-t border-(--editor-border) bg-(--panel-bg) px-4 text-[9px] text-(--text-muted)">
+        <span className="flex items-center gap-1.5 text-(--text-primary)">
+          <span className="online-dot" /> Live canvas
+        </span>
         <span>Last saved just now</span>
-        <button onClick={onSaveNow}>Save now <span>⌘ S</span></button>
+        <button
+          className="ml-auto border-0 bg-transparent text-[9px] text-(--text-secondary)"
+          onClick={onSaveNow}
+        >
+          Save now{" "}
+          <span className="ml-1.5 rounded border border-(--editor-border) px-1 py-0.5 text-[8px] text-(--text-muted)">
+            ⌘ S
+          </span>
+        </button>
       </div>
     </main>
   );

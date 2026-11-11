@@ -1,6 +1,7 @@
 
 import { z } from "zod";
-import type { PageNode } from "@visual-builder/document-schema";
+import { componentTypeSchema, styleSchema, type PageNode } from "@visual-builder/document-schema";
+import componentDefinitions from "./components.json";
 
 export type ComponentType = PageNode["type"];
 
@@ -43,76 +44,32 @@ export const componentPropsSchemas = {
   image: imagePropsSchema,
 } satisfies Record<ComponentType, z.ZodType>;
 
-export const componentRegistry = {
-  container: {
-    label: "Container",
-    category: "Layout",
-    defaultProps: {},
-    editableProps: [],
-  },
-  heading: {
-    label: "Heading",
-    category: "Typography",
-    defaultProps: {
-      text: "Your heading",
-      level: "h1",
-    },
-    editableProps: [
-      { name: "text", label: "Text", control: "text" },
-      { name: "level", label: "Heading level", control: "select" },
-    ],
-  },
-  text: {
-    label: "Text",
-    category: "Typography",
-    defaultProps: {
-      text: "Start writing your content here.",
-    },
-    editableProps: [
-      { name: "text", label: "Text", control: "textarea" },
-    ],
-  },
-  button: {
-    label: "Button",
-    category: "Actions",
-    defaultProps: {
-      label: "Click me",
-      href: "#",
-      variant: "primary",
-    },
-    editableProps: [
-      { name: "label", label: "Button label", control: "text" },
-      { name: "href", label: "Link", control: "text" },
-      { name: "variant", label: "Style", control: "select" },
-    ],
-  },
-  image: {
-    label: "Image",
-    category: "Media",
-    defaultProps: {
-      src: "https://placehold.co/600x400",
-      alt: "Placeholder image",
-      objectFit: "cover",
-    },
-    editableProps: [
-      { name: "src", label: "Image URL", control: "text" },
-      { name: "alt", label: "Alternative text", control: "text" },
-      { name: "objectFit", label: "Fit", control: "select" },
-    ],
-  },
-} as const satisfies Record<
-  ComponentType,
-  {
-    label: string;
-    category: string;
-    defaultProps: Record<string, unknown>;
-    editableProps: {
-      name: string;
-      label: string;
-      control: "text" | "textarea" | "select";
-    }[];
+const componentDefinitionSchema = z.object({
+  label: z.string().min(1),
+  insertLabel: z.string().min(1),
+  description: z.string(),
+  category: z.string().min(1),
+  icon: z.string().min(1),
+  defaultText: z.string(),
+  defaultProps: z.record(z.string(), z.unknown()),
+  defaultStyles: styleSchema,
+  editableProps: z.array(z.object({
+    name: z.string().min(1),
+    label: z.string().min(1),
+    control: z.enum(["text", "textarea", "select"]),
+  }).strict()),
+}).strict();
+
+const componentDefinitionsSchema = z.record(componentTypeSchema, componentDefinitionSchema);
+
+export const componentRegistry = componentDefinitionsSchema.parse(componentDefinitions);
+
+for (const [type, definition] of Object.entries(componentRegistry) as [ComponentType, (typeof componentRegistry)[ComponentType]][]) {
+  const result = componentPropsSchemas[type].safeParse(definition.defaultProps);
+  if (!result.success) {
+    throw new Error(`Invalid default properties for ${type}: ${result.error.message}`);
   }
->;
+}
 
 export function getComponentDefinition(type: ComponentType) {
   return componentRegistry[type];
