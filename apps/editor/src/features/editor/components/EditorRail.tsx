@@ -12,17 +12,17 @@ export function EditorRail({ canEdit, onInsertOpen, onAiOpen, onAssetSelect }: E
   const assetInput = useRef<HTMLInputElement>(null);
 
   return (
-    <aside className="left-rail z-[2] flex w-[53px] flex-none flex-col items-center gap-[7px] border-r border-[var(--editor-border)] bg-[var(--panel-bg)] py-3">
-      <button className="grid size-[34px] place-items-center rounded-lg border-0 bg-[var(--selection-bg)] text-[var(--brand-color)] transition-colors" title="Builder">
+    <aside className="left-rail z-2 flex w-13.25 flex-none flex-col items-center gap-1.75 border-r border-(--editor-border) bg-(--panel-bg) py-3">
+      <button className="grid size-8.5 place-items-center rounded-lg border-0 bg-(--selection-bg) text-(--brand-color) transition-colors" title="Builder">
         <Icon name="grid" />
       </button>
-      <button className="grid size-[34px] place-items-center rounded-lg border-0 bg-transparent text-[var(--text-muted)] transition-colors hover:bg-[var(--tool-hover)] hover:text-[var(--brand-color)]" title="Insert" onClick={onInsertOpen}>
+      <button className="grid size-8.5 place-items-center rounded-lg border-0 bg-transparent text-(--text-muted) transition-colors hover:bg-(--tool-hover) hover:text-(--brand-color)" title="Insert" onClick={onInsertOpen}>
         <Icon name="plus" />
       </button>
-      <button className="grid size-[34px] place-items-center rounded-lg border-0 bg-[var(--selection-bg)] text-[var(--brand-color)] transition-colors hover:bg-[var(--tool-hover)] disabled:cursor-not-allowed disabled:opacity-50" title="Generate a website with AI" disabled={!canEdit} onClick={onAiOpen}>
+      <button className="grid size-8.5 place-items-center rounded-lg border-0 bg-(--selection-bg) text-(--brand-color) transition-colors hover:bg-(--tool-hover) disabled:cursor-not-allowed disabled:opacity-50" title="Generate a website with AI" disabled={!canEdit} onClick={onAiOpen}>
         <Icon name="sparkles" />
       </button>
-      <button className="grid size-[34px] place-items-center rounded-lg border-0 bg-transparent text-[var(--text-muted)] transition-colors hover:bg-[var(--tool-hover)] hover:text-[var(--brand-color)] disabled:cursor-not-allowed disabled:opacity-50" title="Add an image asset" disabled={!canEdit} onClick={() => assetInput.current?.click()}>
+      <button className="grid size-8.5 place-items-center rounded-lg border-0 bg-transparent text-(--text-muted) transition-colors hover:bg-(--tool-hover) hover:text-(--brand-color) disabled:cursor-not-allowed disabled:opacity-50" title="Add an image asset" disabled={!canEdit} onClick={() => assetInput.current?.click()}>
         <Icon name="image" />
       </button>
       <input
@@ -37,7 +37,7 @@ export function EditorRail({ canEdit, onInsertOpen, onAiOpen, onAssetSelect }: E
         }}
       />
       <div className="rail-spacer flex-1" />
-      <button className="grid size-[34px] place-items-center rounded-lg border-0 bg-transparent text-[var(--text-muted)] opacity-50" title="Settings are not available yet" disabled>
+      <button className="grid size-8.5 place-items-center rounded-lg border-0 bg-transparent text-(--text-muted) opacity-50" title="Settings are not available yet" disabled>
         <Icon name="settings" />
       </button>
       <div className="rail-avatar">M</div>
