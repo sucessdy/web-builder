@@ -39,6 +39,7 @@ type SidebarProps = {
   onAddInsertPreset: (preset: InsertPresetId) => void;
   onAddLayout: (layout: LayoutId) => void;
   onAssetSelect: (file: File) => void;
+  uploadingAsset: boolean;
   onAiOpen: () => void;
   onToggleVisibility: (id: string) => void;
   onReorder: (draggedId: string, targetId: string) => void;
@@ -73,6 +74,7 @@ export function EditorSidebar({
   onAddInsertPreset,
   onAddLayout,
   onAssetSelect,
+  uploadingAsset,
   onAiOpen,
   onToggleVisibility,
   onReorder,
@@ -86,6 +88,7 @@ export function EditorSidebar({
         onInsertOpen={() => onTabChange("blocks")}
         onAiOpen={onAiOpen}
         onAssetSelect={onAssetSelect}
+        uploadingAsset={uploadingAsset}
       />
 
       <aside className="left-panel flex min-h-0 w-61.5 flex-none flex-col border-r border-(--editor-border) bg-(--panel-bg) max-[1120px]:w-55.5 max-[820px]:w-47.5">

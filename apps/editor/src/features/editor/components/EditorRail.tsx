@@ -1,14 +1,16 @@
 import { useRef } from "react";
 import { Icon } from "../../icons/Icon";
+import { IMAGE_UPLOAD_ACCEPT } from "../../../lib/api-client";
 
 type EditorRailProps = {
   canEdit: boolean;
   onInsertOpen: () => void;
   onAiOpen: () => void;
   onAssetSelect: (file: File) => void;
+  uploadingAsset: boolean;
 };
 
-export function EditorRail({ canEdit, onInsertOpen, onAiOpen, onAssetSelect }: EditorRailProps) {
+export function EditorRail({ canEdit, onInsertOpen, onAiOpen, onAssetSelect, uploadingAsset }: EditorRailProps) {
   const assetInput = useRef<HTMLInputElement>(null);
 
   return (
@@ -22,14 +24,15 @@ export function EditorRail({ canEdit, onInsertOpen, onAiOpen, onAssetSelect }: E
       <button className="grid size-8.5 place-items-center rounded-lg border-0 bg-(--selection-bg) text-(--brand-color) transition-colors hover:bg-(--tool-hover) disabled:cursor-not-allowed disabled:opacity-50" title="Generate a website with AI" disabled={!canEdit} onClick={onAiOpen}>
         <Icon name="sparkles" />
       </button>
-      <button className="grid size-8.5 place-items-center rounded-lg border-0 bg-transparent text-(--text-muted) transition-colors hover:bg-(--tool-hover) hover:text-(--brand-color) disabled:cursor-not-allowed disabled:opacity-50" title="Add an image asset" disabled={!canEdit} onClick={() => assetInput.current?.click()}>
+      <button className="grid size-8.5 place-items-center rounded-lg border-0 bg-transparent text-(--text-muted) transition-colors hover:bg-(--tool-hover) hover:text-(--brand-color) disabled:cursor-not-allowed disabled:opacity-50" title={uploadingAsset ? "Uploading image…" : "Upload image"} aria-busy={uploadingAsset} disabled={!canEdit || uploadingAsset} onClick={() => assetInput.current?.click()}>
         <Icon name="image" />
       </button>
       <input
         ref={assetInput}
         hidden
         type="file"
-        accept="image/*"
+        accept={IMAGE_UPLOAD_ACCEPT}
+        disabled={uploadingAsset}
         onChange={(event) => {
           const file = event.target.files?.[0];
           if (file) onAssetSelect(file);
@@ -40,7 +43,6 @@ export function EditorRail({ canEdit, onInsertOpen, onAiOpen, onAssetSelect }: E
       <button className="grid size-8.5 place-items-center rounded-lg border-0 bg-transparent text-(--text-muted) opacity-50" title="Settings are not available yet" disabled>
         <Icon name="settings" />
       </button>
-      <div className="rail-avatar">M</div>
     </aside>
   );
 }

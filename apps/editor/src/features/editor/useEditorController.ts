@@ -134,6 +134,7 @@ export function useEditorController() {
   const [chatInput, setChatInput] = useState("");
   const [chatSending, setChatSending] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [uploadingAsset, setUploadingAsset] = useState(false);
   const [localNotice, setLocalNotice] = useState("");
   const [dismissedAuthNotice, setDismissedAuthNotice] = useState("");
   const [exportOpen, setExportOpen] = useState(false);
@@ -527,7 +528,9 @@ export function useEditorController() {
   };
 
   const addAsset = async (file: File) => {
-    if (!canEdit) return;
+    if (!canEdit || uploadingAsset) return;
+    setUploadingAsset(true);
+    setNotice("Uploading image…");
     try {
       const src = await uploadImage(file);
       const selectedLayer = findLayer(items, selectedId);
@@ -539,6 +542,7 @@ export function useEditorController() {
             text: file.name,
           })),
         );
+        setNotice("Image replaced successfully.");
         return;
       }
       const id = `image-${crypto.randomUUID()}`;
@@ -566,10 +570,13 @@ export function useEditorController() {
       commit(next);
       setSelected(id);
       setTab("layers");
+      setNotice("Image uploaded and added to the page.");
     } catch (error) {
       setNotice(
         error instanceof Error ? error.message : "Could not load the image.",
       );
+    } finally {
+      setUploadingAsset(false);
     }
   };
 
@@ -684,6 +691,7 @@ export function useEditorController() {
     addInsertPreset,
     addLayout,
     addAsset,
+    uploadingAsset,
     removeItem,
     reorderItems,
     selectItem,

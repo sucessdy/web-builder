@@ -89,6 +89,7 @@ function App() {
     addInsertPreset,
     addLayout,
     addAsset,
+    uploadingAsset,
     removeItem,
     reorderItems,
     selectItem,
@@ -113,6 +114,7 @@ function App() {
         onShare={() => setPublishOpen(true)}
         onPublish={() => setPublishOpen(true)}
         onToggleTheme={toggleTheme}
+        onRenamePage={(name) => renamePage(activePageId, name)}
         onSignOut={() => {
           if (authEnabled) void signOut().catch((error: unknown) => {
             setNotice(error instanceof Error ? error.message : "Could not sign out.");
@@ -151,6 +153,7 @@ function App() {
           onAddInsertPreset={addInsertPreset}
           onAddLayout={addLayout}
           onAssetSelect={(file) => void addAsset(file)}
+          uploadingAsset={uploadingAsset}
           onAiOpen={() => setAiOpen(true)}
           onToggleVisibility={toggleVisibility}
           onReorder={reorderItems}
@@ -187,6 +190,7 @@ function App() {
           onUpdate={update}
           onUpdateStyle={updateStyle}
           onUploadImage={(file) => void addAsset(file)}
+          uploadingAsset={uploadingAsset}
           onDelete={removeItem}
         />
       </div>

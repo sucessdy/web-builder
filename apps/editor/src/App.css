@@ -103,6 +103,24 @@ button {
 .project-name svg {
   color: #999da5;
 }
+.project-name:disabled {
+  cursor: default;
+}
+.project-name-input {
+  width: min(220px, 24vw);
+  min-width: 100px;
+  border: 1px solid var(--input-border);
+  border-radius: 5px;
+  background: var(--input-bg);
+  color: var(--editor-text);
+  font: inherit;
+  padding: 6px 8px;
+  outline: none;
+}
+.project-name-input:focus {
+  border-color: var(--brand-color);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand-color) 18%, transparent);
+}
 .top-center {
   gap: 8px;
   color: #848891;
@@ -180,8 +198,7 @@ button {
 .modal-primary:hover {
   background: #6753e2;
 }
-.avatar,
-.rail-avatar {
+.avatar {
   width: 27px;
   height: 27px;
   border-radius: 50%;
@@ -196,11 +213,6 @@ button {
 }
 .rail-spacer {
   flex: 1;
-}
-.rail-avatar {
-  margin: 2px 0 0;
-  width: 26px;
-  height: 26px;
 }
 .eyebrow-label {
   color: #a3a6ae;
@@ -531,7 +543,7 @@ button {
   gap: 8px;
   color: #9699a1;
 }
-.workspace-user > div:nth-child(2) {
+.workspace-user > div:first-child {
   display: flex;
   flex-direction: column;
   gap: 2px;

@@ -1,6 +1,9 @@
 import type { PageDocument } from "@visual-builder/document-schema";
 
 const apiRoot = (import.meta.env.VITE_API_URL?.trim() || "http://localhost:3000/api").replace(/\/$/, "");
+export const MAX_IMAGE_UPLOAD_SIZE_BYTES = 10 * 1024 * 1024;
+export const IMAGE_UPLOAD_ACCEPT = "image/png,image/jpeg,image/webp,image/gif,image/svg+xml";
+const supportedImageTypes = new Set(IMAGE_UPLOAD_ACCEPT.split(","));
 
 export type StoredPage = { id: string; name: string; document: unknown; updatedAt?: string };
 
@@ -28,11 +31,26 @@ export async function deleteRemotePage(workspaceId: string, pageId: string): Pro
 }
 
 export async function uploadImage(file: File): Promise<string> {
+  if (!supportedImageTypes.has(file.type)) {
+    throw new Error("Choose a PNG, JPEG, WebP, GIF, or SVG image.");
+  }
+  if (file.size > MAX_IMAGE_UPLOAD_SIZE_BYTES) {
+    throw new Error("Image must be 10 MB or smaller.");
+  }
+
   const data = new FormData();
   data.append("file", file);
-  const response = await fetch(`${apiRoot}/assets/upload`, { method: "POST", body: data });
-  const result = await response.json() as { url?: string; message?: string };
-  if (!response.ok || !result.url) throw new Error(result.message ?? `Image upload failed (${response.status}).`);
+  let response: Response;
+  try {
+    response = await fetch(`${apiRoot}/assets/upload`, { method: "POST", body: data });
+  } catch {
+    throw new Error("Could not connect to the image service. Check that the API server is running.");
+  }
+  const result = await response.json().catch(() => null) as { url?: string; message?: string | string[] } | null;
+  if (!response.ok || !result?.url) {
+    const message = Array.isArray(result?.message) ? result.message.join(" ") : result?.message;
+    throw new Error(message ?? `Image upload failed (${response.status}).`);
+  }
   return result.url;
 }
 

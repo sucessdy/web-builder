@@ -3,6 +3,7 @@ import clsx from "clsx";
 import type { NodeStyles } from "@visual-builder/document-schema";
 import type { EditorLayer, LayerType } from "../../../lib/page-model";
 import { Icon, type IconName } from "../../icons/Icon";
+import { IMAGE_UPLOAD_ACCEPT } from "../../../lib/api-client";
 import { styleControlSections } from "../inspector/style-control-registry";
 
 type IconComponent = typeof Icon;
@@ -17,6 +18,7 @@ type InspectorProps = {
   onUpdate: (key: "name" | "text" | "color" | "fontSize" | "level", value: string | number) => void;
   onUpdateStyle: (key: keyof NodeStyles, value: NodeStyles[keyof NodeStyles]) => void;
   onUploadImage: (file: File) => void;
+  uploadingAsset: boolean;
   onDelete: () => void;
 };
 
@@ -152,6 +154,7 @@ export function InspectorPanel({
   onUpdate,
   onUpdateStyle,
   onUploadImage,
+  uploadingAsset,
   onDelete,
 }: InspectorProps) {
   const imageInput = useRef<HTMLInputElement>(null);
@@ -305,12 +308,12 @@ export function InspectorPanel({
             </select>
           </label>}
           {active?.type === "image" && <>
-            <input ref={imageInput} hidden type="file" accept="image/*" onChange={(event) => {
+            <input ref={imageInput} hidden type="file" accept={IMAGE_UPLOAD_ACCEPT} disabled={uploadingAsset} onChange={(event) => {
               const file = event.target.files?.[0];
               if (file) onUploadImage(file);
               event.target.value = "";
             }} />
-            <button className="modal-primary" disabled={!canEdit} onClick={() => imageInput.current?.click()}>Replace image</button>
+            <button className="modal-primary" disabled={!canEdit || uploadingAsset} aria-busy={uploadingAsset} onClick={() => imageInput.current?.click()}>{uploadingAsset ? "Uploading image…" : "Replace image"}</button>
             {active.src && <img className="inspector-image-preview" src={active.src} alt={active.text} />}
           </>}
           <p className="field-help">Changes update the canvas instantly.</p>

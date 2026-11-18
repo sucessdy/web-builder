@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { useState } from "react";
 import type { AuthUser } from "../auth/context/auth-context";
 import { Canvas } from "../canvas/Canvas";
 import type { EditorLayer } from "../../lib/page-model";
@@ -21,6 +22,7 @@ type HeaderProps = {
   onPublish: () => void;
   onSignOut: () => void;
   onToggleTheme: () => void;
+  onRenamePage: (name: string) => void;
 };
 
 export function EditorHeader({
@@ -40,7 +42,18 @@ export function EditorHeader({
   onPublish,
   onSignOut,
   onToggleTheme,
+  onRenamePage,
 }: HeaderProps) {
+  const [editingName, setEditingName] = useState(false);
+  const [draftName, setDraftName] = useState(pageName);
+
+  const finishRename = () => {
+    setEditingName(false);
+    const nextName = draftName.trim().slice(0, 60);
+    if (nextName && nextName !== pageName) onRenamePage(nextName);
+    else setDraftName(pageName);
+  };
+
   return (
     <header className="topbar animate-fade-in">
       <div className="brand">
@@ -51,15 +64,41 @@ export function EditorHeader({
           canvas<span className="brand-dot">.</span>
         </span>
         <span className="brand-divider" />
-        <span className="project-name">
-          Untitled website <Icon name="chevron" size={14} />
-        </span>
+        {editingName ? (
+          <input
+            className="project-name-input"
+            aria-label="Page name"
+            value={draftName}
+            maxLength={60}
+            autoFocus
+            onChange={(event) => setDraftName(event.target.value)}
+            onBlur={finishRename}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") event.currentTarget.blur();
+              if (event.key === "Escape") {
+                setDraftName(pageName);
+                setEditingName(false);
+              }
+            }}
+          />
+        ) : (
+          <button
+            className="project-name"
+            type="button"
+            disabled={!canEdit}
+            title={canEdit ? "Rename page" : "You do not have edit access"}
+            onClick={() => {
+              setDraftName(pageName);
+              setEditingName(true);
+            }}
+          >
+            {pageName} <Icon name="chevron" size={14} />
+          </button>
+        )}
       </div>
       <div className="top-center">
         <span className={`save-dot ${saved ? "is-saved" : ""}`} />
         {saved ? "All changes saved" : "Unsaved changes"}
-        <span className="top-separator" />{" "}
-        <span className="page-path">{pageName}</span>
       </div>
       <div className="top-actions">
         <button
