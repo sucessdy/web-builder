@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import clsx from "clsx";
 import type { NodeStyles } from "@visual-builder/document-schema";
 import type { EditorLayer, LayerType } from "../../../lib/page-model";
@@ -65,6 +65,18 @@ function LengthControl({
   const match = /^(-?\d*\.?\d+)(px|%|rem|vh|vw)$/.exec(value ?? "");
   const unit = value === "auto" ? "auto" : match?.[2] ?? "px";
   const number = match?.[1] ?? "";
+  const [draft, setDraft] = useState(number);
+  const [editing, setEditing] = useState(false);
+
+  const finishEditing = () => {
+    setEditing(false);
+    const numericValue = Number(draft);
+    const nextNumber = draft.trim() && Number.isFinite(numericValue)
+      ? String(numericValue)
+      : "0";
+    setDraft(nextNumber);
+    onChange(`${nextNumber}${unit === "auto" ? "px" : unit}`);
+  };
 
   return (
     <div className="style-control-row">
@@ -72,16 +84,35 @@ function LengthControl({
       <div className="length-control">
         <input
           aria-label={label}
-          type="number"
-          step="1"
+          type="text"
+          inputMode="decimal"
           disabled={disabled || unit === "auto"}
-          value={number}
+          value={editing ? draft : number}
           placeholder={unit === "auto" ? "auto" : "0"}
-          onChange={(event) => onChange(event.target.value ? `${event.target.value}${unit}` : undefined)}
+          onFocus={(event) => {
+            setDraft(number);
+            setEditing(true);
+            event.currentTarget.select();
+          }}
+          onBlur={finishEditing}
+          onChange={(event) => {
+            const next = event.target.value;
+            if (!/^-?\d*\.?\d*$/.test(next)) return;
+            setDraft(next);
+            const isPartialNumber = next === "" || next === "-" || next === "." || next === "-.";
+            onChange(isPartialNumber ? undefined : `${next}${unit}`);
+          }}
         />
         <select aria-label={`${label} unit`} disabled={disabled} value={unit} onChange={(event) => {
           const nextUnit = event.target.value;
-          onChange(nextUnit === "auto" ? "auto" : `${number || "0"}${nextUnit}`);
+          if (nextUnit === "auto") {
+            onChange("auto");
+            return;
+          }
+          const currentNumber = editing ? draft : number;
+          const nextNumber = currentNumber && Number.isFinite(Number(currentNumber)) ? String(Number(currentNumber)) : "0";
+          setDraft(nextNumber);
+          onChange(`${nextNumber}${nextUnit}`);
         }}>
           <option value="px">px</option><option value="%">%</option><option value="rem">rem</option>
           <option value="vh">vh</option><option value="vw">vw</option><option value="auto">auto</option>
@@ -157,8 +188,8 @@ export function InspectorPanel({
                 if (!visible) return null;
 
                 return (
-                  <label className={clsx("control-row", !enabled && "opacity-60")} htmlFor={`style-${String(key)}`} key={control.key}>
-                    <span>{control.label}</span>
+                  <label className={clsx("control-row text-[10px] leading-tight text-[var(--text-secondary)]", !enabled && "opacity-60")} htmlFor={`style-${String(key)}`} key={`${active?.id ?? "selection"}-${control.key}`}>
+                    <span className="text-[10px] leading-tight text-[var(--text-secondary)]">{control.label}</span>
                     <select
                       id={`style-${String(key)}`}
                       className="select-control"
@@ -179,20 +210,20 @@ export function InspectorPanel({
             <div className="section-label">Spacing <Icon name="chevron" size={14} /></div>
             <div className="style-field-grid">
               {boxSpacingFields.map(({ key, shorthand, side, label }) => (
-                <LengthControl key={key} label={label} value={styles[key] as string | undefined ?? boxSideValue(styles[shorthand] as string | undefined, side)} disabled={!canEdit} onChange={(value) => onUpdateStyle(key, value)} />
+                <LengthControl key={`${active?.id ?? "selection"}-${key}`} label={label} value={styles[key] as string | undefined ?? boxSideValue(styles[shorthand] as string | undefined, side)} disabled={!canEdit} onChange={(value) => onUpdateStyle(key, value)} />
               ))}
             </div>
-            <LengthControl label="Gap" value={styles.gap} disabled={!canEdit} onChange={(value) => onUpdateStyle("gap", value)} />
+            <LengthControl key={`${active?.id ?? "selection"}-gap`} label="Gap" value={styles.gap} disabled={!canEdit} onChange={(value) => onUpdateStyle("gap", value)} />
           </section>
           <section className="inspector-section">
             <div className="section-label">Size <Icon name="chevron" size={14} /></div>
             <div className="style-field-grid">
-              <LengthControl label="Width" value={styles.width} disabled={!canEdit} onChange={(value) => onUpdateStyle("width", value)} />
-              <LengthControl label="Height" value={styles.height} disabled={!canEdit} onChange={(value) => onUpdateStyle("height", value)} />
-              <LengthControl label="Min width" value={styles.minWidth} disabled={!canEdit} onChange={(value) => onUpdateStyle("minWidth", value)} />
-              <LengthControl label="Min height" value={styles.minHeight} disabled={!canEdit} onChange={(value) => onUpdateStyle("minHeight", value)} />
-              <LengthControl label="Max width" value={styles.maxWidth} disabled={!canEdit} onChange={(value) => onUpdateStyle("maxWidth", value)} />
-              <LengthControl label="Max height" value={styles.maxHeight} disabled={!canEdit} onChange={(value) => onUpdateStyle("maxHeight", value)} />
+              <LengthControl key={`${active?.id ?? "selection"}-width`} label="Width" value={styles.width} disabled={!canEdit} onChange={(value) => onUpdateStyle("width", value)} />
+              <LengthControl key={`${active?.id ?? "selection"}-height`} label="Height" value={styles.height} disabled={!canEdit} onChange={(value) => onUpdateStyle("height", value)} />
+              <LengthControl key={`${active?.id ?? "selection"}-min-width`} label="Min width" value={styles.minWidth} disabled={!canEdit} onChange={(value) => onUpdateStyle("minWidth", value)} />
+              <LengthControl key={`${active?.id ?? "selection"}-min-height`} label="Min height" value={styles.minHeight} disabled={!canEdit} onChange={(value) => onUpdateStyle("minHeight", value)} />
+              <LengthControl key={`${active?.id ?? "selection"}-max-width`} label="Max width" value={styles.maxWidth} disabled={!canEdit} onChange={(value) => onUpdateStyle("maxWidth", value)} />
+              <LengthControl key={`${active?.id ?? "selection"}-max-height`} label="Max height" value={styles.maxHeight} disabled={!canEdit} onChange={(value) => onUpdateStyle("maxHeight", value)} />
             </div>
           </section>
           <section className="inspector-section">
@@ -233,8 +264,8 @@ export function InspectorPanel({
             <ColorControl label="Text color" value={active?.color ?? "#20231f"} disabled={!canEdit} onChange={(value) => onUpdate("color", value)} />
             <ColorControl label="Background" value={styles.backgroundColor ?? "#ffffff"} disabled={!canEdit} onChange={(value) => onUpdateStyle("backgroundColor", value)} />
             <div className="style-field-grid">
-              <LengthControl label="Radius" value={styles.borderRadius} disabled={!canEdit} onChange={(value) => onUpdateStyle("borderRadius", value)} />
-              <LengthControl label="Border width" value={styles.borderWidth} disabled={!canEdit} onChange={(value) => onUpdateStyle("borderWidth", value)} />
+              <LengthControl key={`${active?.id ?? "selection"}-border-radius`} label="Radius" value={styles.borderRadius} disabled={!canEdit} onChange={(value) => onUpdateStyle("borderRadius", value)} />
+              <LengthControl key={`${active?.id ?? "selection"}-border-width`} label="Border width" value={styles.borderWidth} disabled={!canEdit} onChange={(value) => onUpdateStyle("borderWidth", value)} />
             </div>
             <div className="control-row">
               <label htmlFor="border-style">Border style</label>

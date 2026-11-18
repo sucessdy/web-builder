@@ -209,14 +209,21 @@ button {
   font-weight: 700;
   margin-bottom: 6px;
 }
-.panel-title-row h1,
-.inspector-header h2 {
+.panel-title-row h1 {
   margin: 0;
   font-family: Manrope, sans-serif;
   color: #282a30;
   font-size: 17px;
   letter-spacing: -0.45px;
   font-weight: 700;
+}
+.inspector-header h2 {
+  margin: 0;
+  font-family: inherit;
+  color: #282a30;
+  font-size: 14px;
+  letter-spacing: -0.2px;
+  font-weight: 600;
 }
 .page-count {
   color: #9b9ea6;
@@ -1971,18 +1978,16 @@ button {
 }
 .style-control-row {
   min-width: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-top: 7px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 4px;
 }
 .style-control-row > label {
   color: var(--text-muted);
   font-size: 9px;
 }
 .length-control {
-  width: 116px;
+  width: 100%;
   min-width: 0;
   height: 27px;
   display: flex;
@@ -1990,6 +1995,11 @@ button {
   border: 1px solid var(--input-border);
   border-radius: 4px;
   background: var(--input-bg);
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+.length-control:focus-within {
+  border-color: var(--brand-color);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand-color) 18%, transparent);
 }
 .length-control input {
   width: 100%;
