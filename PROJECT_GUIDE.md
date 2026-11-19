@@ -20,12 +20,14 @@ The repository has two runnable apps and three shared packages:
 - **Editor engine (`packages/editor-engine`)** — immutable document commands,
   document validation, and undo/redo helpers.
 
-The page and component editing flows are present in the editor. Some shared
-architecture is still being adopted incrementally: the editor currently keeps
-an `EditorLayer[]` working model and converts it to `PageDocument` at canvas,
-save, and export boundaries. The editor does not yet use `editor-engine` as its
-runtime state owner. The React renderer currently lives in the editor's Canvas
-feature; there is no separate `renderer-react` package in this workspace.
+The page and component editing flows are present in the editor. The shared
+`editor-engine` now owns the active `PageDocument`, validates changes, and
+provides undo/redo history. The UI keeps an `EditorLayer[]` adapter for its
+existing panels and converts to and from `PageDocument` at the editor boundary.
+The engine currently receives whole-document replacements from the UI adapter;
+granular UI actions can move to node-level commands over time. The React
+renderer currently lives in the editor's Canvas feature; there is no separate
+`renderer-react` package in this workspace.
 
 The current inspector reads display and layout choices from validated JSON
 metadata. Other style groups and component content fields still contain some
@@ -71,15 +73,16 @@ but are not part of the current codebase.
 
 ## Editor data flow
 
-1. `useEditorController` coordinates UI actions, page state, persistence, and
-   editor history.
-2. `page-model.ts` translates between the editor's nested `EditorLayer` model
+1. `useEditorController` coordinates UI actions, page state, and persistence.
+2. `use-editor-engine.ts` adapts UI edits to the shared `editor-engine`, which
+   owns the active `PageDocument`, validation, and undo/redo history.
+3. `page-model.ts` translates between the editor's nested `EditorLayer` model
    and validated `PageDocument` JSON.
-3. Layout presets are loaded from JSON, checked against `NodeStyles`, and
+4. Layout presets are loaded from JSON, checked against `NodeStyles`, and
    expanded into editable section trees by the shared layout builder.
-4. Component insert cards use metadata from `component-registry` through the
+5. Component insert cards use metadata from `component-registry` through the
    editor adapter in `layer-config.ts`.
-5. The Canvas renders the resulting page document. Local storage and the API
+6. The Canvas renders the resulting page document. Local storage and the API
    persist page documents; export uses the same page conversion boundary.
 
 ## Where changes usually belong

@@ -161,12 +161,12 @@ export function InspectorPanel({
   const styles = active?.styles ?? {};
 
   return (
-    <aside className="right-panel flex min-h-0 w-[254px] flex-none flex-col border-l border-[var(--editor-border)] bg-[var(--panel-bg)] motion-safe:animate-slide-in max-[1120px]:w-[225px] max-[820px]:w-[205px]">
+    <aside className="right-panel flex min-h-0 w-63.5 flex-none flex-col border-l border-(--editor-border) bg-(--panel-bg) motion-safe:animate-slide-in max-[1120px]:w-56.25 max-[820px]:w-51.25">
       <div className="inspector-header">
         <div><div className="eyebrow-label">INSPECTOR</div><h2>{active?.name ?? "Selection"}</h2></div>
         <button className="small-icon-button" title="More options are not available yet" disabled><Icon name="more" size={17} /></button>
       </div>
-      <div className="inspector-tabs flex h-[38px] flex-none gap-5 border-b border-[var(--editor-border)] px-[15px]">
+      <div className="inspector-tabs flex h-9.5 flex-none gap-5 border-b border-(--editor-border) px-3.75">
         <button className={clsx("relative border-0 bg-transparent px-0.5 text-[10px] font-semibold", inspectorTab === "style" && "selected")} onClick={() => onTabChange("style")}>Style</button>
         <button className={clsx("relative border-0 bg-transparent px-0.5 text-[10px] font-semibold", inspectorTab === "content" && "selected")} onClick={() => onTabChange("content")}>Properties</button>
       </div>
@@ -191,8 +191,8 @@ export function InspectorPanel({
                 if (!visible) return null;
 
                 return (
-                  <label className={clsx("control-row text-[10px] leading-tight text-[var(--text-secondary)]", !enabled && "opacity-60")} htmlFor={`style-${String(key)}`} key={`${active?.id ?? "selection"}-${control.key}`}>
-                    <span className="text-[10px] leading-tight text-[var(--text-secondary)]">{control.label}</span>
+                  <label className={clsx("control-row text-[10px] leading-tight text-(--text-secondary)", !enabled && "opacity-60")} htmlFor={`style-${String(key)}`} key={`${active?.id ?? "selection"}-${control.key}`}>
+                    <span className="text-[10px] leading-tight text-(--text-secondary)">{control.label}</span>
                     <select
                       id={`style-${String(key)}`}
                       className="select-control"

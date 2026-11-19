@@ -12,6 +12,7 @@ import {
 } from "@visual-builder/component-registry";
 
 export type EditorCommand =
+  | { type: "REPLACE_DOCUMENT"; document: PageDocument }
   | { type: "ADD_NODE"; parentId: string; node: PageNode }
   | { type: "UPDATE_PROPS"; nodeId: string; props: Record<string, unknown> }
   | { type: "UPDATE_STYLES"; nodeId: string; styles: PageNode["styles"] }
@@ -53,6 +54,10 @@ export function applyCommand(
   let next: PageDocument;
 
   switch (command.type) {
+    case "REPLACE_DOCUMENT": {
+      next = command.document;
+      break;
+    }
     case "ADD_NODE": {
       if (findNode(document.root, command.node.id)) {
         throw new Error(`Duplicate node ID: ${command.node.id}`);
@@ -172,6 +177,7 @@ export function createEditorEngine(initialDocument: PageDocument) {
       const nextDocument = applyCommand(currentDocument, command);
 
       undoStack.push(currentDocument);
+      if (undoStack.length > 30) undoStack.shift();
       currentDocument = nextDocument;
       redoStack.length = 0;
 
@@ -194,6 +200,23 @@ export function createEditorEngine(initialDocument: PageDocument) {
       undoStack.push(currentDocument);
       currentDocument = next;
       return currentDocument;
+    },
+
+    replaceDocument(document: PageDocument): PageDocument {
+      const parsed = pageDocumentSchema.parse(document);
+      validateComponentTree(parsed.root);
+      currentDocument = parsed;
+      undoStack.length = 0;
+      redoStack.length = 0;
+      return currentDocument;
+    },
+
+    getUndoCount(): number {
+      return undoStack.length;
+    },
+
+    getRedoCount(): number {
+      return redoStack.length;
     },
   };
 }

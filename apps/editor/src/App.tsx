@@ -23,8 +23,8 @@ function App() {
     pages,
     activePageId,
     activePageName,
-    undoStack,
-    redoStack,
+    undoCount,
+    redoCount,
     selectedId,
     active,
     tab,
@@ -107,8 +107,8 @@ function App() {
         canShare={canShare}
         canPublish={canPublish}
         saved={saved}
-        undoCount={undoStack.length}
-        redoCount={redoStack.length}
+        undoCount={undoCount}
+        redoCount={redoCount}
         onUndo={undo}
         onRedo={redo}
         onShare={() => setPublishOpen(true)}

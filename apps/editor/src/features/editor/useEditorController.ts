@@ -16,7 +16,7 @@ import { createLayout } from "./layouts/create-layout";
 import type { LayoutId } from "./layouts/layout-registry";
 import { insertPresets, type InsertPresetId } from "./insert-presets";
 import { useWorkspaceAccess } from "./useWorkspaceAccess";
-import { useEditorHistory } from "./use-editor-history";
+import { useEditorEngine } from "./use-editor-engine";
 import type { NodeStyles } from "@visual-builder/document-schema";
 import {
   layersToPage,
@@ -120,8 +120,16 @@ export function useEditorController() {
       page.id === activePageId ? { ...page, items: next } : page,
     ));
   };
-  const history = useEditorHistory(initialPages[0]?.items ?? initialItems, canEdit, onItemsChanged);
-  const { items, undoStack, redoStack, commit, undo, redo, replaceItems } = history;
+  const [localNotice, setLocalNotice] = useState("");
+  const history = useEditorEngine(
+    initialPages[0]?.items ?? initialItems,
+    canEdit,
+    onItemsChanged,
+    (error) => setLocalNotice(
+      error instanceof Error ? error.message : "Could not apply this page change.",
+    ),
+  );
+  const { items, undoCount, redoCount, commit, undo, redo, replaceItems } = history;
   const [selected, setSelected] = useState(initialSelection);
   const [tab, setTab] = useState<Tab>("blocks");
   const [inspectorTab, setInspectorTab] = useState<InspectorTab>("style");
@@ -135,7 +143,6 @@ export function useEditorController() {
   const [chatSending, setChatSending] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [uploadingAsset, setUploadingAsset] = useState(false);
-  const [localNotice, setLocalNotice] = useState("");
   const [dismissedAuthNotice, setDismissedAuthNotice] = useState("");
   const [exportOpen, setExportOpen] = useState(false);
   const [exportTarget, setExportTarget] = useState<ExportTarget>("next");
@@ -635,8 +642,8 @@ export function useEditorController() {
     activePageId,
     activePageName:
       pages.find((page) => page.id === activePageId)?.name ?? "Home page",
-    undoStack,
-    redoStack,
+    undoCount,
+    redoCount,
     selectedId,
     active,
     tab,
